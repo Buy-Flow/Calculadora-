@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de Consórcio | BuyFlow</title>
+  <meta name="description" content="Calculadora completa para simular consórcio, contemplação, CDI, aluguel, lance e parcelas." />
+  <style>
+    :root{
+      --bg:#0b1020;--bg2:#111936;--card:#141d3b;--card2:#0f1730;--text:#eef3ff;--muted:#aeb9d6;--line:rgba(255,255,255,.12);
+      --blue:#5c8cff;--cyan:#3be2d0;--green:#58d68d;--yellow:#ffd166;--red:#ff6b6b;--purple:#b387ff;--shadow:0 24px 70px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(92,140,255,.26),transparent 34%),radial-gradient(circle at top right,rgba(59,226,208,.18),transparent 30%),linear-gradient(180deg,var(--bg),#070a14);color:var(--text);min-height:100vh}
+    .wrap{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:28px 0 42px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;margin-bottom:18px}.hero-card,.panel,.result-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,29,59,.92),rgba(15,23,48,.92));box-shadow:var(--shadow);border-radius:var(--radius)}
+    .hero-card{padding:26px;position:relative;overflow:hidden}.hero-card:after{content:"";position:absolute;inset:auto -80px -120px auto;width:260px;height:260px;background:radial-gradient(circle,rgba(59,226,208,.35),transparent 65%)}
+    .badge{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:8px 12px;border-radius:999px;color:var(--muted);font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan)}
+    h1{font-size:clamp(30px,5vw,58px);line-height:.95;margin:18px 0 12px;letter-spacing:-2px}.sub{font-size:17px;line-height:1.5;color:var(--muted);max-width:680px;margin:0}.hero-mini{padding:20px;display:grid;gap:12px}.mini{padding:16px;border-radius:18px;background:rgba(255,255,255,.055);border:1px solid var(--line)}.mini strong{display:block;font-size:24px;margin-bottom:3px}.mini span{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:410px 1fr;gap:18px}.panel{padding:18px}.panel h2{font-size:18px;margin:4px 0 14px}.section{padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);margin-bottom:12px}.section-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;color:#fff;font-weight:800}.hint{font-size:12px;color:var(--muted);font-weight:500}
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}.field{margin-bottom:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}input,select{width:100%;border:1px solid var(--line);background:rgba(5,9,20,.75);color:var(--text);border-radius:14px;padding:12px 12px;font-size:14px;outline:none}input:focus,select:focus{border-color:rgba(92,140,255,.9);box-shadow:0 0 0 3px rgba(92,140,255,.16)}
+    .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:15px;padding:13px 14px;font-weight:900;cursor:pointer;color:#08101f;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 12px 30px rgba(92,140,255,.22)}.btn.secondary{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line);box-shadow:none}.btn:active{transform:translateY(1px)}
+    .results{display:grid;gap:18px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.result-card{padding:16px;box-shadow:none}.k{font-size:12px;color:var(--muted);margin-bottom:8px}.v{font-size:24px;font-weight:950;letter-spacing:-.8px}.v.good{color:var(--green)}.v.bad{color:var(--red)}.v.warn{color:var(--yellow)}.small{font-size:13px;color:var(--muted);line-height:1.45;margin-top:8px}
+    .big{display:grid;grid-template-columns:1fr 1fr;gap:12px}.summary{padding:20px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(92,140,255,.22),rgba(59,226,208,.12));border:1px solid rgba(255,255,255,.15)}.summary h3{font-size:20px;margin:0 0 12px}.summary p{margin:8px 0;color:var(--muted);line-height:1.5}.summary b{color:#fff}.bar{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:12px 0}.bar span{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--green),var(--cyan),var(--blue));border-radius:inherit}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}.table-wrap{overflow:auto}.table-card{padding:18px;border-radius:var(--radius);border:1px solid var(--line);background:rgba(255,255,255,.035)}th{font-size:12px;color:var(--muted);text-align:left;font-weight:700;padding:0 10px}td{background:rgba(255,255,255,.055);padding:12px 10px;font-size:13px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}td:first-child{border-left:1px solid var(--line);border-radius:13px 0 0 13px;font-weight:800}td:last-child{border-right:1px solid var(--line);border-radius:0 13px 13px 0}.copy{width:100%;min-height:170px;background:rgba(5,9,20,.75);border:1px solid var(--line);border-radius:18px;color:var(--text);padding:14px;font-size:14px;line-height:1.5;resize:vertical}.footer-note{color:var(--muted);font-size:12px;line-height:1.5;margin-top:12px}.pill{display:inline-flex;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+    @media(max-width:950px){.hero,.grid,.big{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.hero-mini{grid-template-columns:1fr 1fr}.panel{padding:14px}}@media(max-width:620px){.wrap{width:min(100% - 20px,1180px);padding-top:14px}.hero-card{padding:20px}.cards,.row,.row3,.hero-mini,.btns{grid-template-columns:1fr}.v{font-size:21px}th,td{white-space:nowrap}.sub{font-size:15px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="badge"><span class="dot"></span> Calculadora inteligente de consórcio</div>
+        <h1>Consórcio sem chute.</h1>
+        <p class="sub">Simule parcela reduzida, parcela cheia, contemplação, CDI, aluguel, lance, taxa administrativa e diferença mensal no bolso.</p>
+      </div>
+      <div class="hero-mini hero-card">
+        <div class="mini"><strong id="topCredito">R$ 80.000</strong><span>Crédito por carta</span></div>
+        <div class="mini"><strong id="topCartas">4 cartas</strong><span>Quantidade simulada</span></div>
+        <div class="mini"><strong id="topCdi">14,34%</strong><span>CDI anual usado</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel">
+        <h2>Dados da proposta</h2>
+        <div class="section">
+          <div class="section-title">Carta e prazo <span class="hint">base do cálculo</span></div>
+          <div class="row">
+            <div class="field"><label>Valor do crédito por carta</label><input id="credito" type="number" value="80000" step="1000"></div>
+            <div class="field"><label>Quantidade de cartas</label><input id="cartas" type="number" value="4" min="1" step="1"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Prazo do plano (meses)</label><input id="prazo" type="number" value="220" min="1"></div>
+            <div class="field"><label>Cartas contempladas agora</label><input id="contempladas" type="number" value="1" min="0" step="1"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Parcelas <span class="hint">antes/depois</span></div>
+          <div class="row">
+            <div class="field"><label>Parcela reduzida até contemplar</label><input id="parcelaReduzida" type="number" value="269.84" step="0.01"></div>
+            <div class="field"><label>Parcela cheia após contemplar</label><input id="parcelaCheia" type="number" value="451.64" step="0.01"></div>
+          </div>
+          <div class="row3">
+            <div class="field"><label>Taxa ADM total (%)</label><input id="taxaAdm" type="number" value="24.20" step="0.01"></div>
+            <div class="field"><label>Fundo reserva (%)</label><input id="fundoReserva" type="number" value="0" step="0.01"></div>
+            <div class="field"><label>Seguro mensal</label><input id="seguro" type="number" value="0" step="0.01"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Investimento e aluguel <span class="hint">comparação</span></div>
+          <div class="row">
+            <div class="field"><label>CDI / renda fixa anual (%)</label><input id="cdiAnual" type="number" value="14.34" step="0.01"></div>
+            <div class="field"><label>Imposto sobre rendimento (%)</label><input id="ir" type="number" value="17.5" step="0.1"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Aluguel mensal estimado (%)</label><input id="aluguelPct" type="number" value="0.55" step="0.01"></div>
+            <div class="field"><label>Valorização anual do imóvel (%)</label><input id="valorizacao" type="number" value="4" step="0.1"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lance e tempo <span class="hint">opcional</span></div>
+          <div class="row">
+            <div class="field"><label>Lance ofertado (%)</label><input id="lancePct" type="number" value="0" step="0.1"></div>
+            <div class="field"><label>Média até contemplar (meses)</label><input id="mediaMeses" type="number" value="72" step="1"></div>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="btn" onclick="calcular()">Calcular</button>
+          <button class="btn secondary" onclick="copiarResumo()">Copiar resumo</button>
+        </div>
+        <p class="footer-note">A calculadora usa estimativas. Consórcio depende do contrato, assembleias, índice de correção, lance, regras do grupo e administradora.</p>
+      </aside>
+
+      <section class="results">
+        <div class="cards">
+          <div class="result-card"><div class="k">Antes de contemplar</div><div class="v" id="antes">R$ 0</div><div class="small" id="antesSmall"></div></div>
+          <div class="result-card"><div class="k">Após contemplação atual</div><div class="v warn" id="depois">R$ 0</div><div class="small" id="depoisSmall"></div></div>
+          <div class="result-card"><div class="k">Rendimento líquido estimado</div><div class="v good" id="rendLiquido">R$ 0</div><div class="small" id="rendSmall"></div></div>
+          <div class="result-card"><div class="k">Diferença mensal no bolso</div><div class="v bad" id="diferenca">R$ 0</div><div class="small" id="difSmall"></div></div>
+          <div class="result-card"><div class="k">Aluguel estimado</div><div class="v" id="aluguel">R$ 0</div><div class="small" id="aluguelSmall"></div></div>
+          <div class="result-card"><div class="k">Lance necessário informado</div><div class="v" id="lance">R$ 0</div><div class="small" id="lanceSmall"></div></div>
+        </div>
+
+        <div class="big">
+          <div class="summary">
+            <h3>Leitura rápida</h3>
+            <p id="leitura">Preencha os dados e clique em calcular.</p>
+            <div class="bar"><span id="barSpan"></span></div>
+            <span class="pill" id="status">Aguardando cálculo</span>
+          </div>
+          <div class="summary">
+            <h3>Custo da carta</h3>
+            <p><b id="totalPagoCarta">R$ 0</b> pago por carta se mantiver a parcela cheia até o fim.</p>
+            <p>Taxa ADM mensal aproximada: <b id="admMensal">0%</b> do crédito.</p>
+            <p>Parcela cheia: <b id="pctCheia">0%</b> ao mês do crédito.</p>
+            <p>Parcela reduzida: <b id="pctReduzida">0%</b> ao mês do crédito.</p>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <h2 style="margin:0 0 12px">Cenário por quantidade de cartas contempladas</h2>
+          <div class="table-wrap"><table><thead><tr><th>Contempladas</th><th>Pagamento mensal</th><th>Crédito aplicado</th><th>Rendimento líquido</th><th>Diferença</th></tr></thead><tbody id="tbody"></tbody></table></div>
+        </div>
+
+        <div class="table-card">
+          <h2 style="margin:0 0 12px">Resumo para enviar</h2>
+          <textarea id="resumo" class="copy" readonly></textarea>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const n = id => Number($(id).value || 0);
+    const brl = v => (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    const pct = v => (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + '%';
+    function rendimentoMensal(valor, taxaAnual){ return valor * (Math.pow(1 + taxaAnual/100, 1/12) - 1); }
+    function calcular(){
+      const credito=n('credito'), cartas=Math.max(1,Math.floor(n('cartas'))), prazo=Math.max(1,n('prazo'));
+      let contempladas=Math.floor(n('contempladas')); contempladas=Math.min(Math.max(0,contempladas),cartas); $('contempladas').value=contempladas;
+      const reduzida=n('parcelaReduzida'), cheia=n('parcelaCheia'), taxaAdm=n('taxaAdm'), fundo=n('fundoReserva'), seguro=n('seguro');
+      const cdi=n('cdiAnual'), ir=n('ir'), aluguelPct=n('aluguelPct'), lancePct=n('lancePct'), mediaMeses=n('mediaMeses'), valorizacao=n('valorizacao');
+      const antes=cartas*reduzida;
+      const depois=(contempladas*cheia)+((cartas-contempladas)*reduzida)+(cartas*seguro);
+      const creditoAplicado=contempladas*credito;
+      const rendBruto=rendimentoMensal(creditoAplicado,cdi);
+      const rendLiquido=rendBruto*(1-ir/100);
+      const diferenca=depois-rendLiquido;
+      const aluguel=credito*aluguelPct/100;
+      const lance=credito*lancePct/100;
+      const totalPagoCarta=cheia*prazo;
+      const admMensal=taxaAdm/prazo;
+      const fundoMensal=fundo/prazo;
+      const pctCheia=cheia/credito*100;
+      const pctReduzida=reduzida/credito*100;
+      const valorizado=credito*Math.pow(1+valorizacao/100,mediaMeses/12);
+
+      $('topCredito').textContent=brl(credito); $('topCartas').textContent=cartas+' carta'+(cartas>1?'s':''); $('topCdi').textContent=pct(cdi);
+      $('antes').textContent=brl(antes); $('antesSmall').textContent=cartas+' × '+brl(reduzida)+' antes de contemplar.';
+      $('depois').textContent=brl(depois); $('depoisSmall').textContent=contempladas+' cheia(s) + '+(cartas-contempladas)+' reduzida(s).';
+      $('rendLiquido').textContent=brl(rendLiquido); $('rendSmall').textContent='Bruto: '+brl(rendBruto)+' | IR usado: '+pct(ir)+'.';
+      $('diferenca').textContent=brl(Math.abs(diferenca)); $('difSmall').textContent=diferenca>0?'Ainda falta completar esse valor por mês.':'O rendimento cobre as parcelas e sobra esse valor.';
+      $('diferenca').className='v '+(diferenca>0?'bad':'good');
+      $('aluguel').textContent=brl(aluguel); $('aluguelSmall').textContent='Usando '+pct(aluguelPct)+' ao mês sobre '+brl(credito)+'.';
+      $('lance').textContent=brl(lance); $('lanceSmall').textContent=lancePct>0?pct(lancePct)+' do crédito por carta.':'Sem lance informado.';
+      $('totalPagoCarta').textContent=brl(totalPagoCarta); $('admMensal').textContent=pct(admMensal); $('pctCheia').textContent=pct(pctCheia); $('pctReduzida').textContent=pct(pctReduzida);
+
+      const cobertura = depois>0 ? Math.min(100, Math.max(0, rendLiquido/depois*100)) : 0;
+      $('barSpan').style.width=cobertura+'%';
+      $('status').textContent = cobertura>=100 ? 'Rendimento cobre a parcela' : 'Rendimento não cobre tudo';
+      $('leitura').innerHTML = `Com <b>${contempladas}</b> carta(s) contemplada(s), o pagamento mensal fica em <b>${brl(depois)}</b>. Aplicando <b>${brl(creditoAplicado)}</b> a <b>${pct(cdi)} ao ano</b>, o rendimento líquido estimado é <b>${brl(rendLiquido)}</b>. ${diferenca>0?'Ainda faltaria <b>'+brl(diferenca)+'</b> por mês.':'Sobraria <b>'+brl(Math.abs(diferenca))+'</b> por mês.'}`;
+
+      const tbody=$('tbody'); tbody.innerHTML='';
+      for(let i=0;i<=cartas;i++){
+        const mensal=(i*cheia)+((cartas-i)*reduzida)+(cartas*seguro);
+        const aplicado=i*credito;
+        const bruto=rendimentoMensal(aplicado,cdi);
+        const liq=bruto*(1-ir/100);
+        const dif=mensal-liq;
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${i}</td><td>${brl(mensal)}</td><td>${brl(aplicado)}</td><td>${brl(liq)}</td><td>${dif>0?'Falta '+brl(dif):'Sobra '+brl(Math.abs(dif))}</td>`;
+        tbody.appendChild(tr);
+      }
+
+      const resumo=`Resumo da simulação do consórcio\n\n${cartas} cartas de ${brl(credito)}\nPrazo: ${prazo} meses\nTaxa ADM: ${pct(taxaAdm)}\nParcela reduzida: ${brl(reduzida)}\nParcela cheia: ${brl(cheia)}\n\nAntes de contemplar:\n${cartas} × ${brl(reduzida)} = ${brl(antes)} por mês\n\nCom ${contempladas} carta(s) contemplada(s):\nTotal mensal: ${brl(depois)}\nCrédito aplicado: ${brl(creditoAplicado)}\nRendimento bruto estimado: ${brl(rendBruto)} por mês\nRendimento líquido estimado: ${brl(rendLiquido)} por mês\n\nDiferença mensal:\n${diferenca>0?'Ainda falta completar '+brl(diferenca)+' por mês.':'Sobra aproximadamente '+brl(Math.abs(diferenca))+' por mês.'}\n\nAluguel estimado de um imóvel de ${brl(credito)}:\n${brl(aluguel)} por mês, usando ${pct(aluguelPct)} ao mês.\n\nLance informado:\n${pct(lancePct)} = ${brl(lance)}\n\nObservação: cálculo estimado. Tem que conferir contrato, reajuste, fundo reserva, seguro, regra de parcela reduzida e lance médio do grupo.`;
+      $('resumo').value=resumo;
+    }
+    async function copiarResumo(){ calcular(); try{ await navigator.clipboard.writeText($('resumo').value); alert('Resumo copiado.'); }catch(e){ $('resumo').select(); document.execCommand('copy'); alert('Resumo copiado.'); } }
+    document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calcular));
+    calcular();
+  </script>
+</body>
+</html>
