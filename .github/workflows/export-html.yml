@@ -1,0 +1,28 @@
+name: Exportar HTML atual
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-html.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+actions: {}
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Preparar arquivo
+        run: cp calculadora/index.html Calculadora-Ademicon.html
+      - name: Enviar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculadora-ademicon-html
+          path: Calculadora-Ademicon.html
+          if-no-files-found: error
