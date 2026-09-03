@@ -2485,6 +2485,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 /* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
@@ -2760,34 +2762,87 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 /* contemplation-credit-v1:start */
-.contemplation-credit-quick{
-  margin:0 12px 12px;
-  padding:0;
+/* O seletor de contemplação não altera a cor do conteúdo ao fundo. */
+.contemplation-modal{
+  background:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
 }
-.contemplation-credit-quick>label{
+
+/* Crédito rápido dentro do menu lateral. */
+.floating-nav-credit{
+  width:100%;
+  padding:9px;
+  border:1px solid #e4e7ec;
+  border-radius:17px;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(16,24,40,.07);
+}
+.floating-nav-credit>label{
   display:block;
-  margin:0 0 7px 2px;
-  color:#475467;
+  margin:0 0 6px 1px;
+  color:#667085;
+  font-size:10px;
+  line-height:1;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+}
+.floating-nav-credit-input{
+  height:38px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:0 9px;
+  border:1px solid #d0d5dd;
+  border-radius:12px;
+  background:#fff;
+}
+.floating-nav-credit-input span{
+  color:#667085;
   font-size:11px;
-  line-height:1.1;
   font-weight:900;
 }
-.contemplation-credit-main{
-  width:100%;
-}
-.contemplation-credit-main .credit-input-wrap{
-  width:100%;
-}
-.contemplation-credit-steps{
-  width:100%;
-}
-.contemplation-credit-shortcuts{
-  margin-top:8px;
-  padding-bottom:1px;
-}
-#projectionCreditQuick{
-  width:100%;
+.floating-nav-credit-input input{
   min-width:0;
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#101828;
+  font-size:15px;
+  font-weight:950;
+  padding:0;
+}
+.floating-nav-credit-steps{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+  margin-top:6px;
+}
+.floating-nav-credit-steps button{
+  height:30px;
+  padding:0 2px;
+  border:1px solid #e4e7ec;
+  border-radius:10px;
+  background:#fff;
+  color:#b42318;
+  font-size:10px;
+  font-weight:950;
+}
+.floating-nav-credit-shortcuts{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  padding-top:6px;
+  scrollbar-width:none;
+}
+.floating-nav-credit-shortcuts::-webkit-scrollbar{display:none}
+.floating-nav-credit-shortcuts .credit-chip{
+  flex:0 0 auto;
+  padding:5px 7px;
+  font-size:9.5px!important;
+  border-radius:999px;
 }
 /* contemplation-credit-v1:end */
 
@@ -2973,35 +3028,6 @@ body.section-focus-mode .section.section-focus-active{
 
 
 
-<!-- contemplation-credit-v1:start -->
-<div class="contemplation-credit-quick credit-control">
-  <label for="projectionCreditQuick">Valor da carta</label>
-
-  <div class="credit-main contemplation-credit-main">
-    <div class="credit-input-wrap">
-      <span>R$</span>
-      <input
-        id="projectionCreditQuick"
-        class="money-input"
-        type="text"
-        inputmode="decimal"
-        autocomplete="off"
-        enterkeyhint="done"
-        value="0,00"
-      >
-    </div>
-
-    <div class="credit-steps-mini contemplation-credit-steps">
-      <button class="credit-step mini" type="button" data-main-credit-step="creditMinus100">-100</button>
-      <button class="credit-step mini" type="button" data-main-credit-step="creditMinus10">-10</button>
-      <button class="credit-step mini" type="button" data-main-credit-step="creditPlus10">+10</button>
-      <button class="credit-step mini" type="button" data-main-credit-step="creditPlus100">+100</button>
-    </div>
-  </div>
-
-  <div class="credit-shortcuts contemplation-credit-shortcuts" id="projectionCreditShortcuts"></div>
-</div>
-<!-- contemplation-credit-v1:end -->
 
           <div class="contemplation-accordion">
             <div class="contemplation-options" id="projectionOptions"></div>
@@ -3576,6 +3602,8 @@ body.section-focus-mode .section.section-focus-active{
 
 
 
+
+
 <!-- floating-nav-v1:start -->
 <button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
@@ -3584,6 +3612,34 @@ body.section-focus-mode .section.section-focus-active{
       <span class="floating-nav-item-icon">🧮</span>
       <span class="floating-nav-item-copy"><strong>Simulação</strong></span>
     </button>
+
+<!-- contemplation-credit-v1:start -->
+<div class="floating-nav-credit" id="floatingNavCredit">
+  <label for="navCreditQuick">Valor da carta</label>
+
+  <div class="floating-nav-credit-input">
+    <span>R$</span>
+    <input
+      id="navCreditQuick"
+      type="text"
+      inputmode="decimal"
+      autocomplete="off"
+      enterkeyhint="done"
+      value="0,00"
+    >
+  </div>
+
+  <div class="floating-nav-credit-steps">
+    <button type="button" data-main-credit-step="creditMinus100">-100</button>
+    <button type="button" data-main-credit-step="creditMinus10">-10</button>
+    <button type="button" data-main-credit-step="creditPlus10">+10</button>
+    <button type="button" data-main-credit-step="creditPlus100">+100</button>
+  </div>
+
+  <div class="floating-nav-credit-shortcuts" id="navCreditShortcuts"></div>
+</div>
+<!-- contemplation-credit-v1:end -->
+
     <button class="floating-nav-item contemplation-shortcut" type="button" data-nav-action="contemplation">
       <span class="floating-nav-item-icon">📅</span>
       <span class="floating-nav-item-copy"><strong>Contemplação prevista</strong></span>
@@ -3833,6 +3889,8 @@ function projectionMaxValue(){
 
 
 
+
+
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
   const btn = $("projectionNumberBtn");
@@ -3852,6 +3910,8 @@ function setProjectionContemplation(value, closeAccordion=true){
 
   calculate();
 }
+
+
 
 
 
@@ -9420,6 +9480,18 @@ restore();
 </script>
 <script>
 
+
+</script>
+<script>
+
+
+</script>
+<script>
+
+
+</script>
+<script>
+
 /* floating-nav-v1-js:start */
 (function(){
   const trigger = document.getElementById('floatingNavTrigger');
@@ -9504,10 +9576,11 @@ restore();
 
 /* contemplation-credit-v1-js:start */
 (function(){
-  const quick = document.getElementById('projectionCreditQuick');
+  const quick = document.getElementById('navCreditQuick');
   const source = document.getElementById('credit');
-  const quickShortcuts = document.getElementById('projectionCreditShortcuts');
-  const openBtn = document.getElementById('projectionNumberBtn');
+  const quickShortcuts = document.getElementById('navCreditShortcuts');
+  const panel = document.getElementById('floatingNavPanel');
+  const trigger = document.getElementById('floatingNavTrigger');
   if(!quick || !source) return;
 
   const syncFromMain = () => {
@@ -9535,14 +9608,13 @@ restore();
       button.disabled = !!mainButton.disabled;
       button.addEventListener('click', () => {
         mainButton.click();
-        syncFromMain();
-        requestAnimationFrame(renderQuickShortcuts);
+        refreshMenuCredit();
       });
       quickShortcuts.appendChild(button);
     });
   };
 
-  const refreshModalCredit = () => {
+  const refreshMenuCredit = () => {
     syncFromMain();
     renderQuickShortcuts();
   };
@@ -9550,7 +9622,7 @@ restore();
   const applyQuickCredit = () => {
     const raw = quick.value;
     if(!raw || !String(raw).trim()){
-      refreshModalCredit();
+      refreshMenuCredit();
       return;
     }
 
@@ -9560,35 +9632,37 @@ restore();
       formatMoneyField(source);
     }
 
-    syncFromMain();
-
     if(typeof renderCreditShortcuts === 'function'){
       renderCreditShortcuts();
     }
 
-    renderQuickShortcuts();
-
     if(typeof calculate === 'function'){
       calculate();
     }
+
+    refreshMenuCredit();
   };
 
-  document.querySelectorAll('[data-main-credit-step]').forEach(button => {
+  document.querySelectorAll('#floatingNavCredit [data-main-credit-step]').forEach(button => {
     button.addEventListener('click', () => {
       const mainId = button.getAttribute('data-main-credit-step');
       const mainButton = mainId ? document.getElementById(mainId) : null;
       if(mainButton){
         mainButton.click();
-        refreshModalCredit();
+        refreshMenuCredit();
       }
     });
   });
 
-  openBtn?.addEventListener('click', () => {
-    requestAnimationFrame(refreshModalCredit);
-  });
+  trigger?.addEventListener('click', () => requestAnimationFrame(refreshMenuCredit));
 
-  quick.addEventListener('focus', syncFromMain);
+  if(panel && 'MutationObserver' in window){
+    const observer = new MutationObserver(() => {
+      if(panel.classList.contains('open')) refreshMenuCredit();
+    });
+    observer.observe(panel, {attributes:true, attributeFilter:['class']});
+  }
+
   quick.addEventListener('change', applyQuickCredit);
   quick.addEventListener('blur', applyQuickCredit);
   quick.addEventListener('keydown', event => {
@@ -9599,8 +9673,8 @@ restore();
     }
   });
 
-  source.addEventListener('change', refreshModalCredit);
-  refreshModalCredit();
+  source.addEventListener('change', refreshMenuCredit);
+  refreshMenuCredit();
 })();
 /* contemplation-credit-v1-js:end */
 
@@ -9622,7 +9696,7 @@ restore();
   };
 
   const modalIsOpen = () => !!document.querySelector(
-    'dialog[open], .projection-modal.open, .modal.open, [role="dialog"][aria-hidden="false"]'
+    'dialog[open], .projection-modal.open, .contemplation-modal.open, .modal.open, [role="dialog"][aria-hidden="false"]'
   );
 
   const updateFocus = () => {
