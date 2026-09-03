@@ -2387,6 +2387,21 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
       <div class="scenario-section-head">
         <div>
           <h2>O que fazer se contemplar no início, meio ou fim?</h2>
+          <span>Cada momento pode ter uma estratégia diferente: vender a contemplada, comprar patrimônio ou aproveitar o reajuste acumulado da carta.</span>
+        </div>
+      </div>
+      <div class="scenario-guide">
+        <div class="scenario-guide-item start">
+          <b>INÍCIO</b>
+          <span>Venda da contemplada</span>
+        </div>
+        <div class="scenario-guide-item middle">
+          <b>MEIO</b>
+          <span>Comprar patrimônio</span>
+        </div>
+        <div class="scenario-guide-item end">
+          <b>FIM</b>
+          <span>Crédito reajustado</span>
         </div>
       </div>
 <div class="scenario-scroll" id="contemplationScenarios"></div>
@@ -4221,68 +4236,179 @@ function renderContemplationScenarios({
       insuranceBeforeEnabled:!!$("insuranceToggle")?.checked,
       insuranceAfterEnabled:true
     });
-    const paidThroughContemplation = schedule.payments
-      .filter(payment => payment.month <= item.month)
-      .reduce((sum,payment) => sum + payment.totalPayment, 0);
     return {
       ...item,
       schedule,
       cartaAtual:schedule.creditAtContemplation,
-      paidThroughContemplation,
       balance:schedule.snapshotAtContemplation?.totalBalance || 0
     };
   });
 
   box.innerHTML = scenarios.map(s => {
     const remainingMonths = Math.max(totalMonths - s.month, 0);
+    const remainingYears = remainingMonths / 12;
     const adjustment = Math.max(s.cartaAtual - (Number(credit)||0), 0);
-    let hook = "ESTRATÉGIA: USAR O CRÉDITO";
-    let benefit = "Use o cenário para planejar; a contemplação não tem data garantida.";
-    let indicated = "Quem quer comparar momentos possíveis do grupo.";
+    let hook = "";
+    let benefit = "";
+    let indicated = "";
     let body = "";
 
     if(s.type === "start"){
       hook = "ESTRATÉGIA: USAR OU TRANSFERIR A COTA";
-      benefit = "Uma eventual transferência depende de aprovação, saldo e condições de mercado.";
-      indicated = "Quem quer flexibilidade no início do plano.";
+      benefit = "Contemplou cedo? Você pode usar o crédito ou negociar a transferência da cota, conforme as regras aplicáveis.";
+      indicated = "Quem quer flexibilidade logo no início do plano.";
       body = `
-        <div class="scenario-simple-title">A venda não possui ágio fixo de 30%.</div>
+        <div class="scenario-simple-title">Contemplou cedo? Pode usar ou transferir a cota.</div>
+
         <div class="scenario-simple-box">
-          <div class="scenario-simple-metric"><span>Valor da carta</span><b>${money(s.cartaAtual)}</b></div>
-          <div class="scenario-simple-metric"><span>Valor de transferência</span><b>A negociar</b></div>
-          <div class="scenario-simple-metric" style="grid-column:1 / -1"><span>Saldo devedor no cenário</span><b>${money(s.balance)}</b></div>
+          <div class="scenario-simple-metric">
+            <span>Valor da carta</span>
+            <b>${money(s.cartaAtual)}</b>
+          </div>
+          <div class="scenario-simple-metric">
+            <span>Valor de transferência</span>
+            <b>A negociar</b>
+          </div>
+          <div class="scenario-simple-metric" style="grid-column:1 / -1">
+            <span>Saldo devedor no cenário</span>
+            <b>${money(s.balance)}</b>
+          </div>
+        </div>
+
+        <div class="scenario-ideas">
+          <div class="scenario-idea">
+            <div class="icon">💸</div>
+            <div class="txt"><b>Transferir a cota</b><span>Negociar com aprovação.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🏠</div>
+            <div class="txt"><b>Comprar o bem</b><span>Usar o crédito liberado.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🤝</div>
+            <div class="txt"><b>Fazer negócio</b><span>Aproveitar a oportunidade.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🔁</div>
+            <div class="txt"><b>Reinvestir</b><span>Planejar outro objetivo.</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-simple-warning">
+          A transferência depende da aprovação da administradora e não possui ágio fixo de 30%. O valor é negociado entre as partes.
+        </div>
+
+        <div class="scenario-simple-explain">
+          <b>Na prática</b><br>
+          No início, a vantagem é ter mais tempo para usar o crédito, adquirir o bem ou negociar a transferência da cota conforme as regras do grupo.
         </div>`;
     }else if(s.type === "middle"){
+      hook = "ESTRATÉGIA: COMPRAR PATRIMÔNIO";
+      benefit = "Use o crédito para transformar o planejamento em imóvel, negócio ou outro patrimônio que possa gerar resultado.";
+      indicated = "Quem quer usar o crédito para construir patrimônio e renda.";
       body = `
-        <div class="scenario-simple-title">O crédito já pode ser direcionado ao bem ou serviço.</div>
+        <div class="scenario-simple-title">No meio do plano, o crédito já pode virar patrimônio.</div>
+
         <div class="scenario-simple-box">
-          <div class="scenario-simple-metric"><span>Crédito no cenário</span><b>${money(s.cartaAtual)}</b></div>
-          <div class="scenario-simple-metric"><span>Tempo restante</span><b>${remainingMonths} meses</b></div>
-          <div class="scenario-simple-metric" style="grid-column:1 / -1"><span>Reajuste acumulado</span><b>${money(adjustment)}</b></div>
+          <div class="scenario-simple-metric">
+            <span>Crédito disponível para comprar</span>
+            <b>${money(s.cartaAtual)}</b>
+          </div>
+          <div class="scenario-simple-metric">
+            <span>Tempo restante no plano</span>
+            <b>${remainingMonths} meses${remainingYears >= 1 ? ` • ${formatNumberBR(remainingYears,1)} anos` : ""}</b>
+          </div>
+          <div class="scenario-simple-metric" style="grid-column:1 / -1">
+            <span>Valor que a carta já aumentou até aqui</span>
+            <b>${money(adjustment)}</b>
+          </div>
+        </div>
+
+        <div class="scenario-ideas">
+          <div class="scenario-idea">
+            <div class="icon">🏠</div>
+            <div class="txt"><b>Casa ou apartamento</b><span>Morar, alugar ou revender.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🏢</div>
+            <div class="txt"><b>Sala ou ponto comercial</b><span>Para abrir ou ampliar negócio.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🚗</div>
+            <div class="txt"><b>Veículo de trabalho</b><span>Carro, utilitário ou ferramenta de renda.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🛠️</div>
+            <div class="txt"><b>Equipamentos e estrutura</b><span>Máquinas, reforma ou expansão.</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-simple-explain">
+          <b>Na prática</b><br>
+          No meio do plano, a vantagem é equilibrar uma carta já reajustada com bastante tempo para usar o crédito e transformar isso em patrimônio.
         </div>`;
     }else{
-      hook = "ESTRATÉGIA: PLANEJAR O ENCERRAMENTO";
-      benefit = "No fim, a parcela reduzida pode deixar parte do fundo comum a descontar da carta.";
-      indicated = "Quem aceita esperar e quer visualizar o crédito líquido.";
+      hook = "ESTRATÉGIA: APROVEITAR O REAJUSTE";
+      benefit = "No fim, o destaque é o crédito reajustado e o valor líquido disponível conforme o plano escolhido.";
+      indicated = "Quem aceita esperar e planeja usar o crédito no encerramento.";
       const finalCredit = s.schedule.finalSettlement?.liquidCredit || s.cartaAtual;
       body = `
-        <div class="scenario-simple-title">Resultado estimado no encerramento.</div>
+        <div class="scenario-simple-title">No fim, veja quanto crédito ficou disponível.</div>
+
         <div class="scenario-simple-box">
-          <div class="scenario-simple-metric"><span>Carta reajustada</span><b>${money(s.cartaAtual)}</b></div>
-          <div class="scenario-simple-metric"><span>Parcelas pagas</span><b>${money(s.schedule.totalInstallmentsPaid)}</b></div>
-          <div class="scenario-simple-metric" style="grid-column:1 / -1"><span>Crédito líquido estimado</span><b>${money(finalCredit)}</b></div>
+          <div class="scenario-simple-metric">
+            <span>Carta contratada</span>
+            <b>${money(credit)}</b>
+          </div>
+          <div class="scenario-simple-metric">
+            <span>Valor pago</span>
+            <b>${money(s.schedule.totalInstallmentsPaid)}</b>
+          </div>
+          <div class="scenario-simple-metric" style="grid-column:1 / -1">
+            <span>Crédito disponível</span>
+            <b>${money(finalCredit)}</b>
+          </div>
+        </div>
+
+        <div class="scenario-ideas">
+          <div class="scenario-idea">
+            <div class="icon">📈</div>
+            <div class="txt"><b>Carta reajustada</b><span>Valor atualizado no fim.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🏁</div>
+            <div class="txt"><b>Final do plano</b><span>Planejamento concluído.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">🏠</div>
+            <div class="txt"><b>Compra planejada</b><span>Usar no momento certo.</span></div>
+          </div>
+          <div class="scenario-idea">
+            <div class="icon">💼</div>
+            <div class="txt"><b>Reserva ou negócio</b><span>Aplicar com estratégia.</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-simple-explain">
+          <b>Na prática</b><br>
+          No fim do plano, compare o crédito reajustado com o total pago e considere o crédito líquido indicado para a modalidade escolhida.
         </div>`;
     }
 
     return `
       <article class="scenario-card ${s.type}">
         <div class="scenario-top">
-          <div class="scenario-label"><strong>${s.title}</strong><span class="scenario-month">${s.month}º mês</span></div>
+          <div class="scenario-label">
+            <strong>${s.title}</strong>
+            <span class="scenario-month">${s.month}º mês</span>
+          </div>
           <div class="scenario-hook">${hook}</div>
           <div class="scenario-benefit">${benefit}</div>
           <div class="scenario-for"><span>Melhor para:</span> ${indicated}</div>
         </div>
-        <div class="scenario-body">${body}</div>
+        <div class="scenario-body">
+          ${body}
+        </div>
       </article>`;
   }).join("");
 }
