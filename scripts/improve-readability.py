@@ -35,7 +35,32 @@ text = text.replace(
     1,
 )
 
-# Resumo objetivo dos 18 anos: só os três números pedidos.
+# Remove textos redundantes abaixo dos dois valores principais.
+text = re.sub(
+    r'if\(\$\("historySalaryMeta"\)\)\s*\$\("historySalaryMeta"\)\.textContent=`.*?`;',
+    'if($("historySalaryMeta")) $("historySalaryMeta").textContent="";',
+    text,
+    count=1,
+    flags=re.S,
+)
+text = re.sub(
+    r'if\(\$\("historyInccMeta"\)\)\s*\$\("historyInccMeta"\)\.textContent=`.*?`;',
+    'if($("historyInccMeta")) $("historyInccMeta").textContent="";',
+    text,
+    count=1,
+    flags=re.S,
+)
+
+# Remove o bloco de diferença final e o texto explicando a diferença percentual.
+text = re.sub(
+    r'\s*<div class="incc-money-summary parcel-history-diff">.*?</div>',
+    '',
+    text,
+    count=1,
+    flags=re.S,
+)
+
+# Resumo objetivo: somente as duas médias anuais pedidas.
 text = re.sub(
     r'\s*<div class="history-rate-summary" id="historyRateSummary">.*?</div>\s*</div>',
     '',
@@ -45,10 +70,6 @@ text = re.sub(
 )
 rate_summary = '''
       <div class="history-rate-summary" id="historyRateSummary">
-        <div class="history-rate-card salary-total">
-          <span>💰 Salário no período</span>
-          <strong>+299,47%</strong>
-        </div>
         <div class="history-rate-card salary-average">
           <span>💰 Média do salário</span>
           <strong>8,00% a.a.</strong>
@@ -63,10 +84,10 @@ anchor = '      <div class="incc-history-grid parcel-history-grid">'
 if 'id="historyRateSummary"' not in text and anchor in text:
     text = text.replace(anchor, rate_summary + '\n' + anchor, 1)
 
-marker = '/* global-readable-v2 */'
+marker = '/* global-readable-v3 */'
 css = r'''
 
-/* global-readable-v2 */
+/* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
 .hero p{font-size:13px!important;line-height:1.3!important}
@@ -129,24 +150,21 @@ css = r'''
 .parcel-history-base strong{font-size:15px!important}
 .parcel-history-grid .incc-history-card span{font-size:9.5px!important;line-height:1.2!important}
 .parcel-history-grid .incc-history-card strong{font-size:20px!important}
-.parcel-history-grid .incc-history-card small{font-size:9px!important;line-height:1.25!important}
+.parcel-history-grid .incc-history-card small{display:none!important}
 .parcel-credit-projection strong{font-size:20px!important}
 .parcel-credit-projection small{font-size:9px!important;line-height:1.3!important}
 .parcel-history-explanation strong{font-size:11px!important;line-height:1.4!important}
-.incc-money-summary span{font-size:9px!important}
-.incc-money-summary strong{font-size:20px!important}
-.incc-money-summary small{font-size:9px!important;line-height:1.3!important}
 .incc-history-details>summary{font-size:12px!important;padding:11px!important}
 
 .history-rate-summary{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:6px;
   margin-top:7px;
 }
 .history-rate-card{
   min-width:0;
-  padding:8px 5px;
+  padding:9px 6px;
   border:1px solid #e4e7ec;
   border-radius:11px;
   background:#fff;
@@ -154,24 +172,21 @@ css = r'''
 }
 .history-rate-card span{
   display:block;
-  min-height:25px;
   color:#667085;
-  font-size:9px;
+  font-size:10px;
   line-height:1.15;
   font-weight:900;
 }
 .history-rate-card strong{
   display:block;
-  margin-top:3px;
+  margin-top:4px;
   color:#101828;
-  font-size:15px;
+  font-size:17px;
   line-height:1;
   font-weight:950;
   white-space:nowrap;
 }
-.history-rate-card.salary-total,
 .history-rate-card.salary-average{background:#f6fef9;border-color:#abefc6}
-.history-rate-card.salary-total strong,
 .history-rate-card.salary-average strong{color:#067647}
 .history-rate-card.incc-average{background:#fffaf5;border-color:#fed7aa}
 .history-rate-card.incc-average strong{color:#b54708}
@@ -190,9 +205,10 @@ css = r'''
 .rent-investment-metric{padding:7px!important}
 '''
 
-# Remove a versão anterior da camada global e grava a nova.
+# Remove versões anteriores da camada global e grava a nova.
 text = re.sub(r'/\* global-readable-v1 \*/.*?(?=</style>)', '', text, count=1, flags=re.S)
 text = re.sub(r'/\* global-readable-v2 \*/.*?(?=</style>)', '', text, count=1, flags=re.S)
+text = re.sub(r'/\* global-readable-v3 \*/.*?(?=</style>)', '', text, count=1, flags=re.S)
 text = text.replace('</style>', css + '\n</style>', 1)
 
 index_path.write_text(text, encoding='utf-8')
@@ -201,5 +217,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v11', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v12', sw)
     sw_path.write_text(sw, encoding='utf-8')
