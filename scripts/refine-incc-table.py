@@ -107,4 +107,65 @@ css = r'''
 if marker not in text:
     text = text.replace('</style>', css + '\n</style>', 1)
 
+# Refinamento do cabeçalho e alinhamento da tabela no mobile.
+center_marker = '/* incc-table-centered-sticky-v2 */'
+center_css = r'''
+
+/* incc-table-centered-sticky-v2 */
+.incc-history-table-wrap{
+  position:relative;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding-top:0!important;
+}
+.incc-history-table{
+  margin:0!important;
+}
+.incc-history-table thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:8!important;
+  height:31px;
+  padding:8px 3px!important;
+  background:#f1f4f7!important;
+  color:#475467!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+  box-shadow:0 2px 5px rgba(16,24,40,.10);
+}
+.incc-history-table thead th:first-child{
+  border-radius:9px 0 0 9px!important;
+}
+.incc-history-table thead th:last-child{
+  border-radius:0 9px 9px 0!important;
+}
+.incc-history-table tbody td{
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+.incc-history-table td.money{
+  text-align:center!important;
+}
+.incc-history-table .winner-cell{
+  text-align:center!important;
+}
+.incc-history-table .winner-badge{
+  margin-left:auto;
+  margin-right:auto;
+}
+.incc-history-table th:nth-child(4){
+  text-align:center!important;
+}
+'''
+
+if center_marker not in text:
+    text = text.replace('</style>', center_css + '\n</style>', 1)
+
+# Renova o cache do PWA para o visual novo chegar também no app instalado.
+sw_path = Path('calculadora/service-worker.js')
+if sw_path.exists():
+    sw = sw_path.read_text(encoding='utf-8')
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v8', sw)
+    sw_path.write_text(sw, encoding='utf-8')
+
 path.write_text(text, encoding='utf-8')
