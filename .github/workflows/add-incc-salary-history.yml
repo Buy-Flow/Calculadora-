@@ -8,6 +8,7 @@ on:
       - 'scripts/add-incc-salary-history.py'
       - 'scripts/refine-incc-table.py'
       - 'scripts/improve-readability.py'
+      - 'scripts/add-floating-navigation.py'
   workflow_dispatch:
 
 permissions:
@@ -38,6 +39,9 @@ jobs:
       - name: Aumentar legibilidade geral e reduzir microtexto
         run: python scripts/improve-readability.py
 
+      - name: Adicionar menu flutuante de navegação
+        run: python scripts/add-floating-navigation.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -47,7 +51,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Aumentar fontes e simplificar explicações"
+            git commit -m "Adicionar menu flutuante de navegação"
             git push
           fi
 
