@@ -3,6 +3,9 @@ name: Publicar Calculadora
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'scripts/**'
+      - '.github/workflows/add-incc-salary-history.yml'
   workflow_dispatch:
 
 permissions:
