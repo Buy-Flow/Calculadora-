@@ -2121,6 +2121,69 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 .incc-history-table td.diff-positive{white-space:nowrap;text-align:right;color:#067647;font-weight:950}
 .incc-history-value-sub{display:block;margin-top:1px;color:#98a2b3;font-size:6px;font-weight:750}
 
+
+
+/* incc-client-mobile-v2 */
+.incc-client-argument{
+  margin-top:8px;
+  padding:10px;
+  border:1px solid #e4e7ec;
+  border-radius:12px;
+  background:#fff;
+  color:#344054;
+}
+.incc-client-argument span{display:none!important}
+.incc-client-argument strong{
+  display:block;
+  margin:0;
+  color:#344054;
+  font-size:10.2px;
+  line-height:1.42;
+  font-weight:800;
+}
+.incc-history-table-wrap{
+  max-height:390px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  border-top:1px solid #eef0f3;
+}
+.incc-history-table{
+  width:100%;
+  min-width:0!important;
+  table-layout:fixed;
+  border-collapse:collapse;
+  font-size:9.2px;
+}
+.incc-history-table th{
+  padding:7px 4px;
+  font-size:7.5px;
+  line-height:1.05;
+  white-space:nowrap;
+}
+.incc-history-table th:nth-child(1){width:13%}
+.incc-history-table th:nth-child(2){width:29%}
+.incc-history-table th:nth-child(3){width:29%}
+.incc-history-table th:nth-child(4){width:29%}
+.incc-history-table td{
+  padding:7px 4px;
+  font-size:9px;
+  line-height:1.1;
+}
+.incc-history-table td:first-child{font-weight:900}
+.incc-history-table td.money,
+.incc-history-table td.diff-positive{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+}
+.incc-history-value-sub{
+  margin-top:2px;
+  font-size:7px;
+  line-height:1;
+}
+.incc-history-details>summary{font-size:10px;padding:10px}
+.incc-history-note{font-size:7.4px;line-height:1.3;margin-top:7px}
+
 </style>
 </head>
 <body>
@@ -2625,14 +2688,14 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
       <div class="incc-history-grid">
         <div class="incc-history-card salary">
-          <span>Média anual do salário mínimo</span>
+          <span>Salário mínimo • média anual</span>
           <strong>8,44% a.a.</strong>
-          <small>R$ 300 → R$ 1.518,00 • valorização acumulada de +406%</small>
+          <small>R$ 300 → R$ 1.518,00 • +406% no período</small>
         </div>
         <div class="incc-history-card incc">
-          <span>Média anual do INCC-M</span>
+          <span>INCC-M • média anual</span>
           <strong>6,82% a.a.</strong>
-          <small>R$ 300 → R$ 1.122,17 • valorização acumulada de +274%</small>
+          <small>R$ 300 → R$ 1.122,17 • +274% no período</small>
         </div>
       </div>
 
@@ -2648,48 +2711,47 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
       </div>
 
       <div class="incc-money-summary">
-        <span>Mesma largada: R$ 300 no fim de 2005</span>
+        <span>Diferença de valorização • mesma base de R$ 300</span>
         <strong>R$ 395,83 de diferença</strong>
-        <small>Em 2025: salário mínimo R$ 1.518,00 × equivalente pelo INCC-M R$ 1.122,17. O salário terminou 35,27% acima do valor corrigido pelo INCC.</small>
+        <small>Salário: 8,44% a.a. × INCC-M: 6,82% a.a. • diferença média de 1,62 p.p. ao ano. No acumulado: +406% × +274%.</small>
       </div>
 
       <div class="incc-client-argument">
-        <span>Argumento para apresentar ao cliente</span>
-        <strong>“Se a gente pegar os mesmos R$ 300 de 2005 e comparar os dois caminhos, em 2025 o salário mínimo chegou a R$ 1.518, enquanto pelo INCC-M esse valor chegaria a cerca de R$ 1.122. Historicamente, foram 8,44% ao ano no salário contra 6,82% no INCC. No final, uma diferença de quase R$ 396 — 35,27% a mais. Isso mostra que o reajuste da carta não significa automaticamente que a renda fique para trás.”</strong>
+        <strong>Partindo exatamente da mesma base de R$ 300, o salário mínimo chegou a R$ 1.518 em 2025, enquanto o mesmo valor corrigido pelo INCC-M chegaria a cerca de R$ 1.122. Nesse período, o salário cresceu em média 8,44% ao ano e o INCC-M 6,82% ao ano. Isso ajuda a colocar o reajuste da carta em perspectiva: ele atualiza o valor do crédito e, historicamente neste recorte, ficou abaixo da evolução do salário mínimo.</strong>
       </div>
 
       <details class="incc-history-details">
         <summary>Ver histórico ano a ano</summary>
         <div class="incc-history-table-wrap">
           <table class="incc-history-table">
-            <thead><tr><th>Ano</th><th>Salário mínimo</th><th>Equivalente pelo INCC*</th><th>Diferença</th></tr></thead>
+            <thead><tr><th>Ano</th><th>Salário</th><th>Pelo INCC</th><th>Dif.</th></tr></thead>
             <tbody>
-              <tr><td>2006</td><td class="money">R$ 350,00<span class="incc-history-value-sub">+16,67%</span></td><td class="money">R$ 315,15<span class="incc-history-value-sub">INCC 5,05%</span></td><td class="diff-positive">+R$ 34,85</td></tr>
-              <tr><td>2007</td><td class="money">R$ 380,00<span class="incc-history-value-sub">+8,57%</span></td><td class="money">R$ 334,15<span class="incc-history-value-sub">INCC 6,03%</span></td><td class="diff-positive">+R$ 45,85</td></tr>
-              <tr><td>2008</td><td class="money">R$ 415,00<span class="incc-history-value-sub">+9,21%</span></td><td class="money">R$ 374,15<span class="incc-history-value-sub">INCC 11,97%</span></td><td class="diff-positive">+R$ 40,85</td></tr>
-              <tr><td>2009</td><td class="money">R$ 465,00<span class="incc-history-value-sub">+12,05%</span></td><td class="money">R$ 386,16<span class="incc-history-value-sub">INCC 3,21%</span></td><td class="diff-positive">+R$ 78,84</td></tr>
-              <tr><td>2010</td><td class="money">R$ 510,00<span class="incc-history-value-sub">+9,68%</span></td><td class="money">R$ 415,39<span class="incc-history-value-sub">INCC 7,57%</span></td><td class="diff-positive">+R$ 94,61</td></tr>
-              <tr><td>2011</td><td class="money">R$ 545,00<span class="incc-history-value-sub">+6,86%</span></td><td class="money">R$ 446,88<span class="incc-history-value-sub">INCC 7,58%</span></td><td class="diff-positive">+R$ 98,12</td></tr>
-              <tr><td>2012</td><td class="money">R$ 622,00<span class="incc-history-value-sub">+14,13%</span></td><td class="money">R$ 479,28<span class="incc-history-value-sub">INCC 7,25%</span></td><td class="diff-positive">+R$ 142,72</td></tr>
-              <tr><td>2013</td><td class="money">R$ 678,00<span class="incc-history-value-sub">+9,00%</span></td><td class="money">R$ 517,96<span class="incc-history-value-sub">INCC 8,07%</span></td><td class="diff-positive">+R$ 160,04</td></tr>
-              <tr><td>2014</td><td class="money">R$ 724,00<span class="incc-history-value-sub">+6,78%</span></td><td class="money">R$ 552,87<span class="incc-history-value-sub">INCC 6,74%</span></td><td class="diff-positive">+R$ 171,13</td></tr>
-              <tr><td>2015</td><td class="money">R$ 788,00<span class="incc-history-value-sub">+8,84%</span></td><td class="money">R$ 592,79<span class="incc-history-value-sub">INCC 7,22%</span></td><td class="diff-positive">+R$ 195,21</td></tr>
-              <tr><td>2016</td><td class="money">R$ 880,00<span class="incc-history-value-sub">+11,68%</span></td><td class="money">R$ 630,37<span class="incc-history-value-sub">INCC 6,34%</span></td><td class="diff-positive">+R$ 249,63</td></tr>
-              <tr><td>2017</td><td class="money">R$ 937,00<span class="incc-history-value-sub">+6,48%</span></td><td class="money">R$ 655,77<span class="incc-history-value-sub">INCC 4,03%</span></td><td class="diff-positive">+R$ 281,23</td></tr>
-              <tr><td>2018</td><td class="money">R$ 954,00<span class="incc-history-value-sub">+1,81%</span></td><td class="money">R$ 681,81<span class="incc-history-value-sub">INCC 3,97%</span></td><td class="diff-positive">+R$ 272,19</td></tr>
-              <tr><td>2019</td><td class="money">R$ 998,00<span class="incc-history-value-sub">+4,61%</span></td><td class="money">R$ 709,96<span class="incc-history-value-sub">INCC 4,13%</span></td><td class="diff-positive">+R$ 288,04</td></tr>
-              <tr><td>2020</td><td class="money">R$ 1.045,00<span class="incc-history-value-sub">+4,71%</span></td><td class="money">R$ 771,59<span class="incc-history-value-sub">INCC 8,68%</span></td><td class="diff-positive">+R$ 273,41</td></tr>
-              <tr><td>2021</td><td class="money">R$ 1.100,00<span class="incc-history-value-sub">+5,26%</span></td><td class="money">R$ 879,84<span class="incc-history-value-sub">INCC 14,03%</span></td><td class="diff-positive">+R$ 220,16</td></tr>
-              <tr><td>2022</td><td class="money">R$ 1.212,00<span class="incc-history-value-sub">+10,18%</span></td><td class="money">R$ 962,64<span class="incc-history-value-sub">INCC 9,41%</span></td><td class="diff-positive">+R$ 249,36</td></tr>
-              <tr><td>2023</td><td class="money">R$ 1.320,00<span class="incc-history-value-sub">+8,91%</span></td><td class="money">R$ 994,60<span class="incc-history-value-sub">INCC 3,32%</span></td><td class="diff-positive">+R$ 325,40</td></tr>
-              <tr><td>2024</td><td class="money">R$ 1.412,00<span class="incc-history-value-sub">+6,97%</span></td><td class="money">R$ 1.057,65<span class="incc-history-value-sub">INCC 6,34%</span></td><td class="diff-positive">+R$ 354,35</td></tr>
-              <tr><td>2025</td><td class="money">R$ 1.518,00<span class="incc-history-value-sub">+7,51%</span></td><td class="money">R$ 1.122,17<span class="incc-history-value-sub">INCC 6,10%</span></td><td class="diff-positive">+R$ 395,83</td></tr>
+              <tr><td>2006</td><td class="money">R$ 350,00<span class="incc-history-value-sub">+16,67%</span></td><td class="money">R$ 315,15<span class="incc-history-value-sub">5,05%</span></td><td class="diff-positive">+R$ 34,85</td></tr>
+              <tr><td>2007</td><td class="money">R$ 380,00<span class="incc-history-value-sub">+8,57%</span></td><td class="money">R$ 334,15<span class="incc-history-value-sub">6,03%</span></td><td class="diff-positive">+R$ 45,85</td></tr>
+              <tr><td>2008</td><td class="money">R$ 415,00<span class="incc-history-value-sub">+9,21%</span></td><td class="money">R$ 374,15<span class="incc-history-value-sub">11,97%</span></td><td class="diff-positive">+R$ 40,85</td></tr>
+              <tr><td>2009</td><td class="money">R$ 465,00<span class="incc-history-value-sub">+12,05%</span></td><td class="money">R$ 386,16<span class="incc-history-value-sub">3,21%</span></td><td class="diff-positive">+R$ 78,84</td></tr>
+              <tr><td>2010</td><td class="money">R$ 510,00<span class="incc-history-value-sub">+9,68%</span></td><td class="money">R$ 415,39<span class="incc-history-value-sub">7,57%</span></td><td class="diff-positive">+R$ 94,61</td></tr>
+              <tr><td>2011</td><td class="money">R$ 545,00<span class="incc-history-value-sub">+6,86%</span></td><td class="money">R$ 446,88<span class="incc-history-value-sub">7,58%</span></td><td class="diff-positive">+R$ 98,12</td></tr>
+              <tr><td>2012</td><td class="money">R$ 622,00<span class="incc-history-value-sub">+14,13%</span></td><td class="money">R$ 479,28<span class="incc-history-value-sub">7,25%</span></td><td class="diff-positive">+R$ 142,72</td></tr>
+              <tr><td>2013</td><td class="money">R$ 678,00<span class="incc-history-value-sub">+9,00%</span></td><td class="money">R$ 517,96<span class="incc-history-value-sub">8,07%</span></td><td class="diff-positive">+R$ 160,04</td></tr>
+              <tr><td>2014</td><td class="money">R$ 724,00<span class="incc-history-value-sub">+6,78%</span></td><td class="money">R$ 552,87<span class="incc-history-value-sub">6,74%</span></td><td class="diff-positive">+R$ 171,13</td></tr>
+              <tr><td>2015</td><td class="money">R$ 788,00<span class="incc-history-value-sub">+8,84%</span></td><td class="money">R$ 592,79<span class="incc-history-value-sub">7,22%</span></td><td class="diff-positive">+R$ 195,21</td></tr>
+              <tr><td>2016</td><td class="money">R$ 880,00<span class="incc-history-value-sub">+11,68%</span></td><td class="money">R$ 630,37<span class="incc-history-value-sub">6,34%</span></td><td class="diff-positive">+R$ 249,63</td></tr>
+              <tr><td>2017</td><td class="money">R$ 937,00<span class="incc-history-value-sub">+6,48%</span></td><td class="money">R$ 655,77<span class="incc-history-value-sub">4,03%</span></td><td class="diff-positive">+R$ 281,23</td></tr>
+              <tr><td>2018</td><td class="money">R$ 954,00<span class="incc-history-value-sub">+1,81%</span></td><td class="money">R$ 681,81<span class="incc-history-value-sub">3,97%</span></td><td class="diff-positive">+R$ 272,19</td></tr>
+              <tr><td>2019</td><td class="money">R$ 998,00<span class="incc-history-value-sub">+4,61%</span></td><td class="money">R$ 709,96<span class="incc-history-value-sub">4,13%</span></td><td class="diff-positive">+R$ 288,04</td></tr>
+              <tr><td>2020</td><td class="money">R$ 1.045,00<span class="incc-history-value-sub">+4,71%</span></td><td class="money">R$ 771,59<span class="incc-history-value-sub">8,68%</span></td><td class="diff-positive">+R$ 273,41</td></tr>
+              <tr><td>2021</td><td class="money">R$ 1.100,00<span class="incc-history-value-sub">+5,26%</span></td><td class="money">R$ 879,84<span class="incc-history-value-sub">14,03%</span></td><td class="diff-positive">+R$ 220,16</td></tr>
+              <tr><td>2022</td><td class="money">R$ 1.212,00<span class="incc-history-value-sub">+10,18%</span></td><td class="money">R$ 962,64<span class="incc-history-value-sub">9,41%</span></td><td class="diff-positive">+R$ 249,36</td></tr>
+              <tr><td>2023</td><td class="money">R$ 1.320,00<span class="incc-history-value-sub">+8,91%</span></td><td class="money">R$ 994,60<span class="incc-history-value-sub">3,32%</span></td><td class="diff-positive">+R$ 325,40</td></tr>
+              <tr><td>2024</td><td class="money">R$ 1.412,00<span class="incc-history-value-sub">+6,97%</span></td><td class="money">R$ 1.057,65<span class="incc-history-value-sub">6,34%</span></td><td class="diff-positive">+R$ 354,35</td></tr>
+              <tr><td>2025</td><td class="money">R$ 1.518,00<span class="incc-history-value-sub">+7,51%</span></td><td class="money">R$ 1.122,17<span class="incc-history-value-sub">6,10%</span></td><td class="diff-positive">+R$ 395,83</td></tr>
             </tbody>
           </table>
         </div>
       </details>
 
-      <p class="incc-history-note"><strong>* Equivalente pelo INCC:</strong> não é um salário oficial. É uma simulação para comparação: usamos a mesma base de R$ 300 vigente no fim de 2005 e aplicamos, ano a ano, somente o INCC-M. A coluna “Salário mínimo” mostra o valor nominal oficial vigente no fim de cada ano. Em 15 dos 20 anos analisados, o reajuste anual do salário mínimo também foi maior que o INCC-M. Desempenho passado não garante reajustes futuros e a renda individual do cliente pode ter trajetória diferente.</p>
+      <p class="incc-history-note"><strong>* Pelo INCC:</strong> simulação com a mesma base de R$ 300 no fim de 2005, corrigida ano a ano pelo INCC-M. Não representa um salário oficial. Desempenho passado não garante reajustes futuros.</p>
     </section>
 
     <section class="card rent-investment-section section" id="rentInvestmentSection">
