@@ -183,7 +183,7 @@ css = r'''
 .floating-nav-contemplation-chip{
   flex:0 0 auto;
   min-height:30px;
-  padding:5px 9px;
+  padding:5px 8px;
   border:1px solid #e4e7ec;
   border-radius:999px;
   background:#fff;
@@ -256,7 +256,7 @@ js = r'''
       : 1;
 
     const items = [
-      {kind:'month', value:1, month:1, label:'1º mês'}
+      {kind:'month', value:1, month:1, label:'1º m'}
     ];
 
     for(let year=1; year<=totalYears; year++){
@@ -264,7 +264,7 @@ js = r'''
         kind:'year',
         value:year,
         month:Math.min(year * 12, totalMonths),
-        label:`${year}º ano`
+        label:`${year}º`
       });
     }
 
@@ -390,5 +390,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v27', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v28', sw)
     sw_path.write_text(sw, encoding='utf-8')
