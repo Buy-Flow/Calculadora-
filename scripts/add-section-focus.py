@@ -21,22 +21,17 @@ text = re.sub(
 css = r'''
 /* section-focus-v1:start */
 /*
-  Destaca automaticamente a seção que ocupa a maior parte da tela.
-  O efeito é propositalmente suave para preservar a leitura e o desempenho.
+  Destaca a seção dominante sem transform/filter.
+  Isso evita que elementos position:fixed internos fiquem presos ao card.
 */
 .section{
-  transition:opacity .24s ease, filter .24s ease, transform .24s ease, box-shadow .24s ease;
-  transform-origin:center center;
+  transition:opacity .24s ease, box-shadow .24s ease;
 }
 body.section-focus-mode .section.section-focus-dim{
   opacity:.48;
-  filter:blur(.9px) saturate(.82);
-  transform:scale(.994);
 }
 body.section-focus-mode .section.section-focus-active{
   opacity:1;
-  filter:none;
-  transform:scale(1);
   position:relative;
   z-index:3;
   box-shadow:0 18px 44px rgba(16,24,40,.14);
@@ -45,7 +40,6 @@ body.section-focus-mode .section.section-focus-active{
 @media (min-width:769px){
   body.section-focus-mode .section.section-focus-dim{
     opacity:.56;
-    filter:blur(.7px) saturate(.86);
   }
 }
 
@@ -112,7 +106,6 @@ js = r'''
     const viewportShare = bestVisible / vh;
     const leadShare = (bestVisible - secondVisible) / vh;
 
-    // Só ativa quando uma seção realmente domina a tela.
     if(!bestSection || viewportShare < .56 || leadShare < .10){
       clearFocus();
       return;
@@ -149,9 +142,8 @@ text = text.replace('</body>', '<script>\n' + js + '\n</script>\n</body>', 1)
 
 index_path.write_text(text, encoding='utf-8')
 
-# A versão final do cache é definida pelo último patch do workflow.
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v23', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v25', sw)
     sw_path.write_text(sw, encoding='utf-8')
