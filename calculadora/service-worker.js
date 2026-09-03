@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculadora-ademicon-pwa-v24";
+const CACHE_NAME = "calculadora-ademicon-pwa-v26";
 const APP_SHELL = [
   "./",
   "./index.html",
