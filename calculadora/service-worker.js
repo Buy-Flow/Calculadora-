@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculadora-ademicon-pwa-v6";
+const CACHE_NAME = "calculadora-ademicon-pwa-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -33,48 +33,43 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // Navegação: internet primeiro. Isso evita que o app fique preso em um HTML antigo.
+  // Se estiver offline, usa a última versão salva no aparelho.
   if (request.mode === "navigate") {
     event.respondWith(
-      caches.match("./index.html").then(cached => {
-        const networkUpdate = fetch(request)
-          .then(response => {
-            if (response && response.ok) {
-              caches.open(CACHE_NAME).then(cache => {
-                cache.put("./index.html", response.clone());
-                cache.put("./", response.clone());
-              });
-            }
-            return response;
-          })
-          .catch(() => null);
-
-        return cached || networkUpdate || caches.match("./");
-      })
+      fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put("./index.html", copy.clone());
+              cache.put("./", copy);
+            });
+          }
+          return response;
+        })
+        .catch(async () => {
+          return (await caches.match("./index.html")) ||
+                 (await caches.match("./")) ||
+                 Response.error();
+        })
     );
     return;
   }
 
+  // Arquivos estáticos: usa cache imediatamente e atualiza em segundo plano.
   event.respondWith(
     caches.match(request).then(cached => {
-      if (cached) {
-        fetch(request)
-          .then(response => {
-            if (response && response.ok) {
-              caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-            }
-          })
-          .catch(() => {});
-        return cached;
-      }
-
-      return fetch(request)
+      const networkUpdate = fetch(request)
         .then(response => {
           if (response && response.ok) {
             caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
           }
           return response;
         })
-        .catch(() => caches.match("./index.html"));
+        .catch(() => null);
+
+      return cached || networkUpdate || caches.match("./index.html");
     })
   );
 });
