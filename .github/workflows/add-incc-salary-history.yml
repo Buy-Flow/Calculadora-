@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/add-incc-salary-history.yml'
+      - 'scripts/add-incc-salary-history.py'
+      - 'scripts/refine-incc-table.py'
   workflow_dispatch:
 
 permissions:
@@ -41,7 +43,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Melhorar tabela INCC e mostrar vencedor anual"
+            git commit -m "Centralizar tabela INCC e fixar cabeçalho"
             git push
           fi
 
