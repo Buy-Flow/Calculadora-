@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Atualizar comparativo monetário destacado
+      - name: Atualizar comparativo para cliente e mobile
         run: python scripts/add-incc-salary-history.py
       - name: Salvar alteração
         shell: bash
@@ -28,5 +28,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add calculadora/index.html calculadora/service-worker.js
-          git commit -m "Destacar valor e média anual do INCC e salário"
+          git commit -m "Melhorar INCC para cliente e corrigir tabela mobile"
           git push
