@@ -763,6 +763,121 @@ button{cursor:pointer}
   line-height:1.3;
 }
 
+.rent-investment-section{
+  padding:11px;
+  overflow:hidden;
+}
+.rent-investment-config{
+  margin-bottom:8px;
+  padding:8px;
+  border:1px solid #eaecf0;
+  border-radius:12px;
+  background:#fbfcfd;
+}
+.rent-investment-config .finance-controls{
+  margin-bottom:0;
+}
+.rent-investment-period{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:6px;
+  padding:6px 7px;
+  border-radius:9px;
+  background:#f2f4f7;
+}
+.rent-investment-period span{
+  color:#667085;
+  font-size:7.5px;
+  line-height:1.1;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.rent-investment-period strong{
+  color:#101828;
+  font-size:9px;
+  line-height:1.1;
+  font-weight:950;
+  text-align:right;
+}
+.rent-investment-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+.rent-investment-metric{
+  min-width:0;
+  padding:7px;
+  border:1px solid #eaecf0;
+  border-radius:10px;
+  background:#fff;
+}
+.rent-investment-metric span{
+  display:block;
+  min-height:17px;
+  color:#667085;
+  font-size:7.2px;
+  line-height:1.15;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.rent-investment-metric strong{
+  display:block;
+  margin-top:3px;
+  color:#101828;
+  font-size:10.5px;
+  line-height:1.1;
+  font-weight:950;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.rent-investment-metric.negative strong{
+  color:#b42318;
+}
+.rent-investment-result{
+  margin-top:8px;
+  padding:10px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#067647,#079455);
+  color:#fff;
+  text-align:center;
+}
+.rent-investment-result.no-surplus{
+  background:linear-gradient(145deg,#475467,#344054);
+}
+.rent-investment-result span{
+  display:block;
+  font-size:8px;
+  line-height:1.15;
+  font-weight:850;
+  text-transform:uppercase;
+  opacity:.9;
+}
+.rent-investment-result strong{
+  display:block;
+  margin-top:2px;
+  font-size:16px;
+  line-height:1.05;
+  font-weight:950;
+}
+.rent-investment-result small{
+  display:block;
+  margin-top:3px;
+  font-size:7.5px;
+  line-height:1.2;
+  font-weight:750;
+  opacity:.86;
+}
+.rent-investment-note{
+  margin:6px 1px 0;
+  color:#667085;
+  font-size:7.3px;
+  line-height:1.3;
+}
+
 .scenario-section-head{
   display:flex;
   align-items:end;
@@ -2089,6 +2204,87 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 <div class="scenario-scroll" id="contemplationScenarios"></div>
     </section>
 
+    <section class="card rent-investment-section section" id="rentInvestmentSection">
+      <div class="comparison-head">
+        <div>
+          <h2>Consórcio + aluguel <em>x</em> financiamento</h2>
+          <p>A diferença mensal aplicada até a contemplação.</p>
+        </div>
+        <span class="comparison-badge">Tesouro Selic</span>
+      </div>
+
+      <div class="rent-investment-config">
+        <div class="finance-controls">
+          <div class="finance-control">
+            <label>Aluguel mensal R$</label>
+            <input class="money-input" id="rentMonthly" type="text" inputmode="decimal" value="1.500,00">
+          </div>
+          <div class="finance-control">
+            <label>Tesouro Selic a.a. %</label>
+            <input id="treasuryAnnualRate" type="text" inputmode="decimal" value="14,00">
+          </div>
+        </div>
+        <div class="rent-investment-period">
+          <span>Período da projeção</span>
+          <strong id="rentInvestmentPeriod">Até a contemplação</strong>
+        </div>
+      </div>
+
+      <div class="compare-board compare-board-paired">
+        <div class="compare-paired-heads">
+          <div class="compare-paired-head consorcio">Consórcio + aluguel</div>
+          <div class="compare-paired-head financiamento">Financiamento</div>
+        </div>
+
+        <div class="compare-paired-row">
+          <div class="compare-cell consorcio">
+            <span>Custo mensal inicial</span>
+            <strong id="rentCombinedMonthly">R$ 0,00</strong>
+          </div>
+          <div class="compare-cell financiamento">
+            <span>Parcela inicial</span>
+            <strong id="rentFinanceMonthly">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="compare-paired-row">
+          <div class="compare-cell consorcio total">
+            <span>Total até contemplar</span>
+            <strong id="rentCombinedPeriodTotal">R$ 0,00</strong>
+          </div>
+          <div class="compare-cell financiamento total">
+            <span>Parcelas no mesmo período</span>
+            <strong id="rentFinancePeriodTotal">R$ 0,00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="rent-investment-metrics">
+        <div class="rent-investment-metric" id="rentInitialDifferenceCard">
+          <span id="rentInitialDifferenceLabel">Sobra mensal inicial</span>
+          <strong id="rentInitialDifference">R$ 0,00</strong>
+        </div>
+        <div class="rent-investment-metric">
+          <span>Total aplicado</span>
+          <strong id="rentInvestmentContributions">R$ 0,00</strong>
+        </div>
+        <div class="rent-investment-metric">
+          <span>Rendimento bruto</span>
+          <strong id="rentInvestmentEarnings">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="rent-investment-result" id="rentInvestmentResult">
+        <span id="rentInvestmentResultLabel">Saldo bruto projetado no Tesouro Selic</span>
+        <strong id="rentInvestmentBalance">R$ 0,00</strong>
+        <small id="rentInvestmentResultDetail">Aportes mensais até a contemplação.</small>
+      </div>
+
+      <div class="rent-investment-note" id="rentInvestmentNote">
+        Projeção bruta com aportes no fim de cada mês, antes de IR e eventual custódia. Entrada do financiamento e lance não entram nos aportes. Taxa Selic de 14,00% a.a., definida pelo Copom em ago/2026, e editável acima.
+      </div>
+    </section>
+
     <section class="card comparison-section section">
       <div class="comparison-head">
         <div>
@@ -2384,6 +2580,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 <div class="toast" id="toast">Copiado!</div>
 
 <script>
+const CURRENT_SELIC_ANNUAL_RATE = 14.00;
+
 const financeDefaults = {
   // Prazos padrão de financiamento por categoria.
   imoveis:{down:20, months:350, annualRate:14.03, extraPct:3.00, balanceCorrectionPct:2.00, monthlyCharges:0},
@@ -4493,6 +4691,146 @@ function toast(msg){
 }
 
 
+function projectMonthlySavings({
+  financingPayments=[],
+  consortiumPayments=[],
+  rentMonthly=0,
+  months=0,
+  annualRatePct=CURRENT_SELIC_ANNUAL_RATE
+}={}){
+  const horizon = Math.max(Math.floor(Number(months) || 0), 0);
+  const rent = Math.max(Number(rentMonthly) || 0, 0);
+  const annualRate = Math.max(Number(annualRatePct) || 0, 0) / 100;
+  const monthlyRate = annualRate > 0
+    ? Math.pow(1 + annualRate, 1/12) - 1
+    : 0;
+
+  let balance = 0;
+  let totalContributions = 0;
+  let totalCombined = 0;
+  let totalFinancing = 0;
+  let totalShortfall = 0;
+  let positiveMonths = 0;
+
+  for(let index=0; index<horizon; index++){
+    const financing = Math.max(Number(financingPayments[index]) || 0, 0);
+    const consortium = Math.max(Number(consortiumPayments[index]) || 0, 0);
+    const combined = consortium + rent;
+    const difference = financing - combined;
+
+    // O saldo existente rende durante o mês. A nova sobra é aplicada
+    // no fim do mês, depois do pagamento das despesas daquele período.
+    balance *= (1 + monthlyRate);
+
+    if(difference > 0){
+      balance += difference;
+      totalContributions += difference;
+      positiveMonths += 1;
+    }else if(difference < 0){
+      totalShortfall += Math.abs(difference);
+    }
+
+    totalCombined += combined;
+    totalFinancing += financing;
+  }
+
+  const firstFinancing = Math.max(Number(financingPayments[0]) || 0, 0);
+  const firstConsortium = Math.max(Number(consortiumPayments[0]) || 0, 0);
+
+  return {
+    months:horizon,
+    monthlyRate,
+    firstFinancing,
+    firstConsortium,
+    firstCombined:firstConsortium + rent,
+    initialDifference:firstFinancing - (firstConsortium + rent),
+    totalCombined,
+    totalFinancing,
+    totalDifference:totalFinancing - totalCombined,
+    totalContributions,
+    totalShortfall,
+    positiveMonths,
+    grossEarnings:Math.max(balance - totalContributions, 0),
+    grossBalance:Math.max(balance, 0)
+  };
+}
+
+function renderRentInvestmentComparison({
+  financePayments=[],
+  consortiumSchedule=null,
+  contemplationMonth=1,
+  financeDownValue=0
+}={}){
+  const section = $("rentInvestmentSection");
+  if(!section) return;
+
+  const visible = active === "imoveis";
+  section.style.display = visible ? "" : "none";
+  if(!visible) return;
+
+  const horizon = Math.max(Math.floor(Number(contemplationMonth) || 1), 1);
+  const rent = Math.max(parseLocaleNumber($("rentMonthly")?.value || "0"), 0);
+  const rateText = String($("treasuryAnnualRate")?.value || "").trim();
+  const annualRate = rateText
+    ? Math.max(parseLocaleNumber(rateText), 0)
+    : CURRENT_SELIC_ANNUAL_RATE;
+
+  const consortiumPayments = Array.from({length:horizon}, (_,index)=>
+    Math.max(
+      Number(consortiumSchedule?.payments?.[index]?.totalPayment) ||
+      Number(consortiumSchedule?.payments?.[index]?.basePayment) || 0,
+      0
+    )
+  );
+
+  const projection = projectMonthlySavings({
+    financingPayments:financePayments,
+    consortiumPayments,
+    rentMonthly:rent,
+    months:horizon,
+    annualRatePct:annualRate
+  });
+
+  $("rentInvestmentPeriod").textContent =
+    `Até o ${horizon}º mês • ${currentMode === "reduced" ? "parcela reduzida" : "parcela cheia"}`;
+
+  $("rentCombinedMonthly").textContent = money(projection.firstCombined);
+  $("rentFinanceMonthly").textContent = money(projection.firstFinancing);
+  $("rentCombinedPeriodTotal").textContent = money(projection.totalCombined);
+  $("rentFinancePeriodTotal").textContent = money(projection.totalFinancing);
+
+  const initialDifferenceIsPositive = projection.initialDifference >= 0;
+  $("rentInitialDifferenceLabel").textContent = initialDifferenceIsPositive
+    ? "Sobra mensal inicial"
+    : "Falta mensal inicial";
+  $("rentInitialDifference").textContent = money(Math.abs(projection.initialDifference));
+  $("rentInitialDifferenceCard").classList.toggle(
+    "negative",
+    !initialDifferenceIsPositive
+  );
+
+  $("rentInvestmentContributions").textContent =
+    money(projection.totalContributions);
+  $("rentInvestmentEarnings").textContent =
+    money(projection.grossEarnings);
+  $("rentInvestmentBalance").textContent =
+    money(projection.grossBalance);
+
+  const hasSurplus = projection.totalContributions > 0;
+  $("rentInvestmentResult").classList.toggle("no-surplus", !hasSurplus);
+  $("rentInvestmentResultLabel").textContent = hasSurplus
+    ? "Saldo bruto projetado no Tesouro Selic"
+    : "Sem sobra projetada para investir";
+  $("rentInvestmentResultDetail").textContent = hasSurplus
+    ? `${projection.positiveMonths} aportes mensais até o ${horizon}º mês.`
+    : "Consórcio + aluguel não ficou abaixo da parcela do financiamento.";
+
+  $("rentInvestmentNote").textContent =
+    `Projeção bruta com aportes no fim de cada mês, antes de IR e eventual custódia. ` +
+    `A entrada do financiamento (${money(financeDownValue)}) e eventual lance não entram nos aportes. ` +
+    `Taxa Selic de ${formatNumberBR(annualRate,2)}% a.a.; padrão atual de 14,00% a.a. (Copom, ago/2026).`;
+}
+
 function renderFinanceComparison({
   credit,
   feePct,
@@ -4668,6 +5006,7 @@ function renderFinanceComparison({
   let financeInterest = 0;
   let financeBalanceCorrectionTotal = 0;
   let financeChargesTotal = 0;
+  const financePaymentSchedule = [];
 
   // Simulação mês a mês para permitir:
   // - correção mensal do saldo a partir da estimativa anual;
@@ -4725,6 +5064,8 @@ function renderFinanceComparison({
 
     const installmentWithCharges =
       baseInstallment + monthlyCharges;
+
+    financePaymentSchedule.push(installmentWithCharges);
 
     if(month === 1){
       financeFirstParcel = installmentWithCharges;
@@ -5177,6 +5518,13 @@ function renderFinanceComparison({
     totalDifference >= 0
       ? `${money(totalDifference)} a mais`
       : `${money(Math.abs(totalDifference))} a menos`;
+
+  renderRentInvestmentComparison({
+    financePayments:financePaymentSchedule,
+    consortiumSchedule:lastProjectionSchedule || consortiumReferenceSchedule,
+    contemplationMonth,
+    financeDownValue:downValue
+  });
 
 }
 
@@ -7363,7 +7711,9 @@ function calculate(){
     financeAnnualRate:parseLocaleNumber($("financeAnnualRate")?.value || "0"),
     financeExtraPct:parseLocaleNumber($("financeExtraPct")?.value || "0"),
     financeBalanceCorrectionPct:parseLocaleNumber($("financeBalanceCorrectionPct")?.value || "0"),
-    financeMonthlyCharges:parseLocaleNumber($("financeMonthlyCharges")?.value || "0")
+    financeMonthlyCharges:parseLocaleNumber($("financeMonthlyCharges")?.value || "0"),
+    rentMonthly:parseLocaleNumber($("rentMonthly")?.value || "0"),
+    treasuryAnnualRate:parseLocaleNumber($("treasuryAnnualRate")?.value || String(CURRENT_SELIC_ANNUAL_RATE))
   }));
 }
 
@@ -7452,6 +7802,20 @@ function restore(){
     if($("financeMonthlyCharges")){
       $("financeMonthlyCharges").value = formatNumberBR(
         saved.financeMonthlyCharges ?? financeDefaults[active].monthlyCharges,
+        2
+      );
+    }
+
+    if($("rentMonthly")){
+      $("rentMonthly").value = formatNumberBR(
+        saved.rentMonthly ?? 1500,
+        2
+      );
+    }
+
+    if($("treasuryAnnualRate")){
+      $("treasuryAnnualRate").value = formatNumberBR(
+        saved.treasuryAnnualRate ?? CURRENT_SELIC_ANNUAL_RATE,
         2
       );
     }
@@ -7649,6 +8013,14 @@ $("financeBalanceCorrectionPct")?.addEventListener("blur", ()=>{
 $("financeMonthlyCharges")?.addEventListener("blur", ()=>{
   $("financeMonthlyCharges").value =
     formatNumberBR(parseLocaleNumber($("financeMonthlyCharges").value),2);
+  calculate();
+});
+$("treasuryAnnualRate")?.addEventListener("input", calculate);
+$("treasuryAnnualRate")?.addEventListener("blur", ()=>{
+  $("treasuryAnnualRate").value = formatNumberBR(
+    Math.max(parseLocaleNumber($("treasuryAnnualRate").value),0),
+    2
+  );
   calculate();
 });
 
