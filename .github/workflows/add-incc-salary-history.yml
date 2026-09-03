@@ -9,6 +9,7 @@ on:
       - 'scripts/refine-incc-table.py'
       - 'scripts/improve-readability.py'
       - 'scripts/add-floating-navigation.py'
+      - 'scripts/add-contemplation-credit.py'
   workflow_dispatch:
 
 permissions:
@@ -42,6 +43,9 @@ jobs:
       - name: Adicionar menu flutuante de navegação
         run: python scripts/add-floating-navigation.py
 
+      - name: Adicionar ajuste de crédito na contemplação
+        run: python scripts/add-contemplation-credit.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -51,7 +55,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Adicionar menu flutuante de navegação"
+            git commit -m "Adicionar crédito na contemplação prevista"
             git push
           fi
 
