@@ -14,6 +14,7 @@ on:
       - 'scripts/add-section-focus.py'
       - 'scripts/restore-simulation-typography.py'
       - 'scripts/restore-contemplation-month-year.py'
+      - 'scripts/remove-floating-nav-swipe-close.py'
   workflow_dispatch:
 
 permissions:
@@ -62,6 +63,9 @@ jobs:
       - name: Restaurar seleção Mês/Ano da contemplação
         run: python scripts/restore-contemplation-month-year.py
 
+      - name: Remover gesto lateral de fechar o menu
+        run: python scripts/remove-floating-nav-swipe-close.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -71,7 +75,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Restaurar seleção de mês e ano da contemplação"
+            git commit -m "Remover gesto lateral de fechar o menu"
             git push
           fi
 
