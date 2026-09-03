@@ -3,7 +3,6 @@ from pathlib import Path
 index_path = Path('calculadora/index.html')
 text = index_path.read_text(encoding='utf-8')
 
-# Deixa a tabela monetária legível no celular.
 css_marker = '.incc-history-note{margin:7px 1px 0;color:#667085;font-size:7px;line-height:1.3;font-weight:700}'
 css_extra = '''.incc-history-note{margin:7px 1px 0;color:#667085;font-size:7px;line-height:1.3;font-weight:700}\n.incc-money-summary{margin-top:8px;padding:10px;border:1px solid #b7e4c7;border-radius:12px;background:#f0fdf4}\n.incc-money-summary span{display:block;color:#52705d;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.2px}\n.incc-money-summary strong{display:block;margin-top:3px;color:#067647;font-size:19px;line-height:1;font-weight:950}\n.incc-money-summary small{display:block;margin-top:4px;color:#475467;font-size:7.5px;line-height:1.3;font-weight:750}\n.incc-history-table{min-width:440px}\n.incc-history-table td.money{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}\n.incc-history-table td.diff-positive{white-space:nowrap;text-align:right;color:#067647;font-weight:950}\n.incc-history-value-sub{display:block;margin-top:1px;color:#98a2b3;font-size:6px;font-weight:750}'''
 if '.incc-money-summary{' not in text:
@@ -42,13 +41,13 @@ rows = [
 (2015,'7,22%','8,84%','788,00','592,79','195,21'),
 (2016,'6,34%','11,68%','880,00','630,37','249,63'),
 (2017,'4,03%','6,48%','937,00','655,77','281,23'),
-(2018,'3,97%','1,81%','954,00','681,80','272,20'),
+(2018,'3,97%','1,81%','954,00','681,81','272,19'),
 (2019,'4,13%','4,61%','998,00','709,96','288,04'),
-(2020,'8,68%','4,71%','1.045,00','771,58','273,42'),
+(2020,'8,68%','4,71%','1.045,00','771,59','273,41'),
 (2021,'14,03%','5,26%','1.100,00','879,84','220,16'),
-(2022,'9,41%','10,18%','1.212,00','962,63','249,37'),
-(2023,'3,32%','8,91%','1.320,00','994,59','325,41'),
-(2024,'6,34%','6,97%','1.412,00','1.057,64','354,36'),
+(2022,'9,41%','10,18%','1.212,00','962,64','249,36'),
+(2023,'3,32%','8,91%','1.320,00','994,60','325,40'),
+(2024,'6,34%','6,97%','1.412,00','1.057,65','354,35'),
 (2025,'6,10%','7,51%','1.518,00','1.122,17','395,83'),
 ]
 body = []
@@ -62,8 +61,7 @@ for year, incc_pct, sal_pct, sal_value, incc_value, diff in rows:
 new_table = '''          <table class="incc-history-table">\n            <thead><tr><th>Ano</th><th>Salário mínimo</th><th>Equivalente pelo INCC*</th><th>Diferença</th></tr></thead>\n            <tbody>\n''' + '\n'.join(body) + '''\n            </tbody>\n          </table>'''
 text = text[:start] + new_table + text[end:]
 
-old_note_start = '<p class="incc-history-note">'
-note_start = text.find(old_note_start)
+note_start = text.find('<p class="incc-history-note">')
 if note_start == -1:
     raise SystemExit('History note not found')
 note_end = text.find('</p>', note_start)
@@ -75,9 +73,8 @@ text = text[:note_start] + new_note + text[note_end:]
 
 index_path.write_text(text, encoding='utf-8')
 
-# Renova o cache offline para os aparelhos instalados receberem a nova tabela.
 sw_path = Path('calculadora/service-worker.js')
 sw = sw_path.read_text(encoding='utf-8')
-sw = sw.replace('calculadora-ademicon-pwa-v3', 'calculadora-ademicon-pwa-v4')
-sw = sw.replace('calculadora-ademicon-pwa-v2', 'calculadora-ademicon-pwa-v4')
+for old in ['calculadora-ademicon-pwa-v2','calculadora-ademicon-pwa-v3','calculadora-ademicon-pwa-v4']:
+    sw = sw.replace(old, 'calculadora-ademicon-pwa-v5')
 sw_path.write_text(sw, encoding='utf-8')
