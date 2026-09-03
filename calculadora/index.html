@@ -2296,6 +2296,169 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
   text-align:center!important;
 }
 
+
+
+/* parcel-salary-history-18y-v1 */
+.parcel-history-head{align-items:center}
+.parcel-history-head .comparison-badge{white-space:nowrap}
+.parcel-history-base{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  padding:8px;
+  border:1px solid #e4e7ec;
+  border-radius:12px;
+  background:#f8fafc;
+}
+.parcel-history-base>div{
+  min-width:0;
+  padding:7px 8px;
+  border:1px solid #eaecf0;
+  border-radius:10px;
+  background:#fff;
+}
+.parcel-history-base span,
+.parcel-credit-projection span{
+  display:block;
+  color:#667085;
+  font-size:7.2px;
+  line-height:1.15;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.parcel-history-base strong{
+  display:block;
+  margin-top:3px;
+  color:#101828;
+  font-size:13px;
+  line-height:1.05;
+  font-weight:950;
+}
+.parcel-history-base>small{
+  grid-column:1/-1;
+  display:block;
+  color:#667085;
+  font-size:7.3px;
+  line-height:1.25;
+  font-weight:750;
+  padding:0 2px;
+}
+.parcel-history-grid{margin-top:7px}
+.parcel-history-grid .incc-history-card strong{font-size:18px}
+.parcel-credit-projection{
+  margin-top:7px;
+  padding:9px 10px;
+  border:1px solid #fed7aa;
+  border-radius:12px;
+  background:#fff7ed;
+}
+.parcel-credit-projection strong{
+  display:block;
+  margin-top:2px;
+  color:#b54708;
+  font-size:18px;
+  line-height:1.05;
+  font-weight:950;
+}
+.parcel-credit-projection small{
+  display:block;
+  margin-top:3px;
+  color:#7a2e0e;
+  font-size:7.5px;
+  line-height:1.25;
+  font-weight:800;
+}
+.parcel-history-diff{margin-top:7px}
+.parcel-history-explanation{margin-top:7px!important}
+.parcel-history-explanation strong{font-size:9.6px!important;line-height:1.4!important}
+.parcel-history-table-wrap,
+.incc-history-table-wrap{
+  position:relative;
+  max-height:390px;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding:0 6px 6px!important;
+  background:#f8fafc!important;
+}
+.parcel-history-table,
+.incc-history-table{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+  border-collapse:separate!important;
+  border-spacing:0 5px!important;
+  margin:0!important;
+}
+.parcel-history-table thead th,
+.incc-history-table thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:9!important;
+  height:31px;
+  padding:8px 3px!important;
+  background:#eef2f6!important;
+  color:#475467!important;
+  border:0!important;
+  box-shadow:0 2px 5px rgba(16,24,40,.10);
+  text-align:center!important;
+  vertical-align:middle!important;
+  font-size:7.2px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.parcel-history-table th:nth-child(1){width:13%!important}
+.parcel-history-table th:nth-child(2){width:27%!important}
+.parcel-history-table th:nth-child(3){width:27%!important}
+.parcel-history-table th:nth-child(4){width:33%!important}
+.parcel-history-table tbody tr{background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.parcel-history-table tbody td{
+  padding:7px 3px!important;
+  border-top:1px solid #eaecf0!important;
+  border-bottom:1px solid #eaecf0!important;
+  color:#475467;
+  font-size:8.5px!important;
+  line-height:1.08!important;
+  font-weight:900;
+  text-align:center!important;
+  vertical-align:middle!important;
+  white-space:nowrap;
+}
+.parcel-history-table tbody td:first-child{
+  border-left:1px solid #eaecf0!important;
+  border-radius:9px 0 0 9px;
+  color:#344054;
+}
+.parcel-history-table tbody td:last-child{
+  border-right:1px solid #eaecf0!important;
+  border-radius:0 9px 9px 0;
+}
+.parcel-history-table tr.latest-year td{background:#f6fef9}
+.parcel-history-value-sub{
+  display:block;
+  margin-top:2px;
+  color:#98a2b3;
+  font-size:6.7px;
+  line-height:1;
+  font-weight:800;
+}
+.winner-cell{text-align:center!important;white-space:nowrap}
+.winner-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:64px;
+  padding:4px 5px;
+  border-radius:999px;
+  font-size:7px;
+  line-height:1;
+  font-weight:950;
+  white-space:nowrap;
+}
+.winner-badge.salary{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+.winner-badge.incc{background:#fff7ed;color:#b54708;border:1px solid #fed7aa}
+
 </style>
 </head>
 <body>
@@ -2790,80 +2953,66 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
     <section class="card incc-salary-section section" id="inccSalarySection">
-      <div class="comparison-head">
+      <div class="comparison-head parcel-history-head">
         <div>
-          <h2>INCC-M <em>x</em> salário mínimo</h2>
-          <p>Uma referência histórica para entender o reajuste da carta.</p>
+          <h2>Parcela <em>x</em> salário mínimo</h2>
+          <p>Como a mesma parcela teria evoluído pelo INCC-M e pela evolução do salário mínimo.</p>
         </div>
-        <span class="comparison-badge">2006–2025</span>
+        <span class="comparison-badge">18 anos • 2008–2025</span>
       </div>
 
-      <div class="incc-history-grid">
+      <div class="parcel-history-base">
+        <div>
+          <span>Carta de crédito usada na simulação</span>
+          <strong id="historyCreditBase">R$ 0,00</strong>
+        </div>
+        <div>
+          <span>Mesma parcela inicial nos dois caminhos</span>
+          <strong id="historyParcelBase">R$ 0,00</strong>
+        </div>
+        <small>Base no fim de 2007. A partir de 2008 são aplicados os reajustes históricos de cada caminho.</small>
+      </div>
+
+      <div class="incc-history-grid parcel-history-grid">
         <div class="incc-history-card salary">
-          <span>Salário mínimo • média anual</span>
-          <strong>8,44% a.a.</strong>
-          <small>R$ 300 → R$ 1.518,00 • +406% no período</small>
+          <span>💰 Pela evolução do salário mínimo</span>
+          <strong id="historySalaryEnd">R$ 0,00</strong>
+          <small id="historySalaryMeta">—</small>
         </div>
         <div class="incc-history-card incc">
-          <span>INCC-M • média anual</span>
-          <strong>6,82% a.a.</strong>
-          <small>R$ 300 → R$ 1.122,17 • +274% no período</small>
+          <span>🏗️ Parcela corrigida pelo INCC-M</span>
+          <strong id="historyInccEnd">R$ 0,00</strong>
+          <small id="historyInccMeta">—</small>
         </div>
       </div>
 
-      <div class="incc-bars" aria-label="Comparação do crescimento acumulado entre salário mínimo e INCC-M">
-        <div class="incc-bar-row">
-          <div class="incc-bar-head"><span>💰 Salário mínimo em 2025</span><strong>R$ 1.518</strong></div>
-          <div class="incc-bar-track"><div class="incc-bar-fill salary"></div></div>
-        </div>
-        <div class="incc-bar-row">
-          <div class="incc-bar-head"><span>🏗️ R$ 300 corrigidos pelo INCC</span><strong>R$ 1.122</strong></div>
-          <div class="incc-bar-track"><div class="incc-bar-fill incc"></div></div>
-        </div>
+      <div class="parcel-credit-projection">
+        <span>🏗️ A carta de crédito, seguindo o mesmo INCC-M</span>
+        <strong id="historyCreditEnd">R$ 0,00</strong>
+        <small id="historyCreditMeta">—</small>
       </div>
 
-      <div class="incc-money-summary">
-        <span>Diferença de valorização • mesma base de R$ 300</span>
-        <strong>R$ 395,83 de diferença</strong>
-        <small>Salário: 8,44% a.a. × INCC-M: 6,82% a.a. • diferença média de 1,62 p.p. ao ano. No acumulado: +406% × +274%.</small>
+      <div class="incc-money-summary parcel-history-diff">
+        <span>Diferença no fim dos 18 anos</span>
+        <strong id="historyDiff">R$ 0,00</strong>
+        <small id="historyDiffMeta">—</small>
       </div>
 
-      <div class="incc-client-argument">
-        <strong>Partindo exatamente da mesma base de R$ 300, o salário mínimo chegou a R$ 1.518 em 2025, enquanto o mesmo valor corrigido pelo INCC-M chegaria a cerca de R$ 1.122. Nesse período, o salário cresceu em média 8,44% ao ano e o INCC-M 6,82% ao ano. Isso ajuda a colocar o reajuste da carta em perspectiva: ele atualiza o valor do crédito e, historicamente neste recorte, ficou abaixo da evolução do salário mínimo.</strong>
+      <div class="incc-client-argument parcel-history-explanation">
+        <strong id="historyClientText">—</strong>
       </div>
 
       <details class="incc-history-details">
-        <summary>Ver histórico ano a ano</summary>
+        <summary>Ver evolução dos últimos 18 anos</summary>
         <div class="incc-history-table-wrap">
-          <table class="incc-history-table">
-            <thead><tr><th>Ano</th><th>Salário</th><th>Pelo INCC</th><th>Subiu mais</th></tr></thead>
-            <tbody>
-              <tr><td>2006</td><td class="money">R$ 350,00<span class="incc-history-value-sub">+16,67%</span></td><td class="money">R$ 315,15<span class="incc-history-value-sub">5,05%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2007</td><td class="money">R$ 380,00<span class="incc-history-value-sub">+8,57%</span></td><td class="money">R$ 334,15<span class="incc-history-value-sub">6,03%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2008</td><td class="money">R$ 415,00<span class="incc-history-value-sub">+9,21%</span></td><td class="money">R$ 374,15<span class="incc-history-value-sub">11,97%</span></td><td class="winner-cell"><span class="winner-badge incc">🏗️ INCC-M</span></td></tr>
-              <tr><td>2009</td><td class="money">R$ 465,00<span class="incc-history-value-sub">+12,05%</span></td><td class="money">R$ 386,16<span class="incc-history-value-sub">3,21%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2010</td><td class="money">R$ 510,00<span class="incc-history-value-sub">+9,68%</span></td><td class="money">R$ 415,39<span class="incc-history-value-sub">7,57%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2011</td><td class="money">R$ 545,00<span class="incc-history-value-sub">+6,86%</span></td><td class="money">R$ 446,88<span class="incc-history-value-sub">7,58%</span></td><td class="winner-cell"><span class="winner-badge incc">🏗️ INCC-M</span></td></tr>
-              <tr><td>2012</td><td class="money">R$ 622,00<span class="incc-history-value-sub">+14,13%</span></td><td class="money">R$ 479,28<span class="incc-history-value-sub">7,25%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2013</td><td class="money">R$ 678,00<span class="incc-history-value-sub">+9,00%</span></td><td class="money">R$ 517,96<span class="incc-history-value-sub">8,07%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2014</td><td class="money">R$ 724,00<span class="incc-history-value-sub">+6,78%</span></td><td class="money">R$ 552,87<span class="incc-history-value-sub">6,74%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2015</td><td class="money">R$ 788,00<span class="incc-history-value-sub">+8,84%</span></td><td class="money">R$ 592,79<span class="incc-history-value-sub">7,22%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2016</td><td class="money">R$ 880,00<span class="incc-history-value-sub">+11,68%</span></td><td class="money">R$ 630,37<span class="incc-history-value-sub">6,34%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2017</td><td class="money">R$ 937,00<span class="incc-history-value-sub">+6,48%</span></td><td class="money">R$ 655,77<span class="incc-history-value-sub">4,03%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2018</td><td class="money">R$ 954,00<span class="incc-history-value-sub">+1,81%</span></td><td class="money">R$ 681,81<span class="incc-history-value-sub">3,97%</span></td><td class="winner-cell"><span class="winner-badge incc">🏗️ INCC-M</span></td></tr>
-              <tr><td>2019</td><td class="money">R$ 998,00<span class="incc-history-value-sub">+4,61%</span></td><td class="money">R$ 709,96<span class="incc-history-value-sub">4,13%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2020</td><td class="money">R$ 1.045,00<span class="incc-history-value-sub">+4,71%</span></td><td class="money">R$ 771,59<span class="incc-history-value-sub">8,68%</span></td><td class="winner-cell"><span class="winner-badge incc">🏗️ INCC-M</span></td></tr>
-              <tr><td>2021</td><td class="money">R$ 1.100,00<span class="incc-history-value-sub">+5,26%</span></td><td class="money">R$ 879,84<span class="incc-history-value-sub">14,03%</span></td><td class="winner-cell"><span class="winner-badge incc">🏗️ INCC-M</span></td></tr>
-              <tr><td>2022</td><td class="money">R$ 1.212,00<span class="incc-history-value-sub">+10,18%</span></td><td class="money">R$ 962,64<span class="incc-history-value-sub">9,41%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2023</td><td class="money">R$ 1.320,00<span class="incc-history-value-sub">+8,91%</span></td><td class="money">R$ 994,60<span class="incc-history-value-sub">3,32%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr><td>2024</td><td class="money">R$ 1.412,00<span class="incc-history-value-sub">+6,97%</span></td><td class="money">R$ 1.057,65<span class="incc-history-value-sub">6,34%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-              <tr class="latest-year"><td>2025</td><td class="money">R$ 1.518,00<span class="incc-history-value-sub">+7,51%</span></td><td class="money">R$ 1.122,17<span class="incc-history-value-sub">6,10%</span></td><td class="winner-cell"><span class="winner-badge salary">💰 Salário</span></td></tr>
-            </tbody>
+          <table class="incc-history-table parcel-history-table">
+            <thead><tr><th>Ano</th><th>💰 Salário</th><th>🏗️ Parcela</th><th>Subiu mais</th></tr></thead>
+            <tbody id="history18Body"></tbody>
           </table>
         </div>
       </details>
 
-      <p class="incc-history-note"><strong>* Pelo INCC:</strong> simulação com a mesma base de R$ 300 no fim de 2005, corrigida ano a ano pelo INCC-M. Não representa um salário oficial. Desempenho passado não garante reajustes futuros.</p>
+      <p class="incc-history-note"><strong>* Comparação normalizada:</strong> o valor da coluna “Salário” não é o salário mínimo oficial daquele ano. Os dois caminhos começam exatamente na mesma parcela exibida pela calculadora. Um acompanha a evolução proporcional do salário mínimo; o outro, o INCC-M histórico. A carta é projetada pelo mesmo INCC-M apenas para visualizar a valorização proporcional. Desempenho passado não garante reajustes futuros.</p>
     </section>
 
     <section class="card rent-investment-section section" id="rentInvestmentSection">
@@ -5220,6 +5369,100 @@ function renderRentInvestmentTimeline({financingPayments=[],consortiumPayments=[
     return `<details class="rent-year${hasContribution?"":" no-contribution"}"><summary><span class="rent-year-label">${year.year}º ano</span><span class="rent-year-main"><b>${mainText}</b><small>${secondaryText}</small></span><span class="rent-year-status">${statusText}</span></summary><div class="rent-year-metrics"><div class="rent-year-metric"><span>Aplicado no ano</span><b>${money(year.contributions)}</b></div><div class="rent-year-metric"><span>Rendimento acumulado</span><b>${money(year.cumulativeEarnings||0)}</b></div><div class="rent-year-metric"><span>Saldo no Tesouro</span><b>${money(year.endBalance||0)}</b></div></div><div class="rent-month-list">${monthRows}</div></details>`;
   }).join("");
 }
+
+
+
+/* parcel-salary-history-18y-js-v1 */
+const PARCEL_HISTORY_18Y = [
+  {year:2008,incc:11.97,salaryPct:9.21,minWage:415},
+  {year:2009,incc:3.21,salaryPct:12.05,minWage:465},
+  {year:2010,incc:7.57,salaryPct:9.68,minWage:510},
+  {year:2011,incc:7.58,salaryPct:6.86,minWage:545},
+  {year:2012,incc:7.25,salaryPct:14.13,minWage:622},
+  {year:2013,incc:8.07,salaryPct:9.00,minWage:678},
+  {year:2014,incc:6.74,salaryPct:6.78,minWage:724},
+  {year:2015,incc:7.22,salaryPct:8.84,minWage:788},
+  {year:2016,incc:6.34,salaryPct:11.68,minWage:880},
+  {year:2017,incc:4.03,salaryPct:6.48,minWage:937},
+  {year:2018,incc:3.97,salaryPct:1.81,minWage:954},
+  {year:2019,incc:4.13,salaryPct:4.61,minWage:998},
+  {year:2020,incc:8.68,salaryPct:4.71,minWage:1045},
+  {year:2021,incc:14.03,salaryPct:5.26,minWage:1100},
+  {year:2022,incc:9.41,salaryPct:10.18,minWage:1212},
+  {year:2023,incc:3.32,salaryPct:8.91,minWage:1320},
+  {year:2024,incc:6.34,salaryPct:6.97,minWage:1412},
+  {year:2025,incc:6.10,salaryPct:7.51,minWage:1518}
+];
+
+function historyPctBR(value){
+  return `${(Number(value)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`;
+}
+
+function renderParcelSalaryHistory18Y({baseParcel=0,credit=0}={}){
+  const section=$("inccSalarySection");
+  if(!section) return;
+  section.style.display = active === "imoveis" ? "" : "none";
+  if(active !== "imoveis") return;
+
+  const parcel=Math.max(Number(baseParcel)||0,0);
+  const baseCredit=Math.max(Number(credit)||0,0);
+  if(parcel<=0) return;
+
+  const salaryBase=380;
+  const salaryEndOfficial=1518;
+  const salaryFactor=salaryEndOfficial/salaryBase;
+  let inccFactor=1;
+  const rows=[];
+
+  PARCEL_HISTORY_18Y.forEach(item=>{
+    inccFactor *= (1 + item.incc/100);
+    const salaryIndexed = parcel * (item.minWage/salaryBase);
+    const inccParcel = parcel * inccFactor;
+    const salaryWins = item.salaryPct > item.incc;
+    rows.push({
+      ...item,
+      salaryIndexed,
+      inccParcel,
+      winner:salaryWins ? 'salary' : 'incc',
+      winnerLabel:salaryWins ? '💰 Salário' : '🏗️ INCC-M'
+    });
+  });
+
+  const salaryEnd=parcel*salaryFactor;
+  const inccEnd=parcel*inccFactor;
+  const creditEnd=baseCredit*inccFactor;
+  const diff=salaryEnd-inccEnd;
+  const diffPct=inccEnd>0 ? (diff/inccEnd)*100 : 0;
+  const salaryGrowth=(salaryFactor-1)*100;
+  const inccGrowth=(inccFactor-1)*100;
+  const salaryCagr=(Math.pow(salaryFactor,1/18)-1)*100;
+  const inccCagr=(Math.pow(inccFactor,1/18)-1)*100;
+
+  if($("historyCreditBase")) $("historyCreditBase").textContent=money(baseCredit);
+  if($("historyParcelBase")) $("historyParcelBase").textContent=money(parcel);
+  if($("historySalaryEnd")) $("historySalaryEnd").textContent=money(salaryEnd);
+  if($("historyInccEnd")) $("historyInccEnd").textContent=money(inccEnd);
+  if($("historyCreditEnd")) $("historyCreditEnd").textContent=money(creditEnd);
+  if($("historyDiff")) $("historyDiff").textContent=`${money(Math.abs(diff))} ${diff>=0?'a favor do salário':'a favor do INCC'}`;
+
+  if($("historySalaryMeta")) $("historySalaryMeta").textContent=`+${historyPctBR(salaryGrowth)} no período • média ${historyPctBR(salaryCagr)} a.a.`;
+  if($("historyInccMeta")) $("historyInccMeta").textContent=`+${historyPctBR(inccGrowth)} no período • média ${historyPctBR(inccCagr)} a.a.`;
+  if($("historyCreditMeta")) $("historyCreditMeta").textContent=`A carta de ${money(baseCredit)} chegaria a aproximadamente ${money(creditEnd)} aplicando o INCC-M histórico do período.`;
+  if($("historyDiffMeta")) $("historyDiffMeta").textContent=`Partindo da mesma parcela de ${money(parcel)}, a evolução do salário termina ${historyPctBR(Math.abs(diffPct))} ${diff>=0?'acima':'abaixo'} da parcela corrigida pelo INCC-M.`;
+  if($("historyClientText")) $("historyClientText").textContent=`Imagine esta mesma carta de ${money(baseCredit)} com uma parcela inicial de ${money(parcel)} há 18 anos. Corrigindo a parcela pelo INCC-M histórico, ela chegaria hoje a cerca de ${money(inccEnd)}. Usando exatamente a mesma parcela inicial, mas acompanhando a evolução do salário mínimo, o equivalente chegaria a ${money(salaryEnd)}. Assim a comparação fica proporcional: os dois começam iguais, e a gente vê qual índice cresceu mais ao longo do tempo.`;
+
+  const body=$("history18Body");
+  if(body){
+    body.innerHTML=rows.map((row,index)=>`
+      <tr class="${index===rows.length-1?'latest-year':''}">
+        <td>${row.year}</td>
+        <td>${money(row.salaryIndexed)}<span class="parcel-history-value-sub">+${historyPctBR(row.salaryPct)}</span></td>
+        <td>${money(row.inccParcel)}<span class="parcel-history-value-sub">INCC ${historyPctBR(row.incc)}</span></td>
+        <td class="winner-cell"><span class="winner-badge ${row.winner}">${row.winnerLabel}</span></td>
+      </tr>`).join('');
+  }
+}
+
 
 function renderRentInvestmentComparison({
   financePayments=[],
@@ -8090,6 +8333,12 @@ function calculate(){
 
   const reducedDisplayed = reduced + insuranceBefore;
   const fullDisplayed = full + insuranceBefore;
+
+  // parcel-salary-history-18y-call
+  renderParcelSalaryHistory18Y({
+    baseParcel: currentMode === "reduced" ? reducedDisplayed : fullDisplayed,
+    credit
+  });
 
   // Para cálculos de saldo, usamos a parcela-base sem seguro,
   // pois seguro não amortiza o saldo.
