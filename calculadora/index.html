@@ -2208,7 +2208,7 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
       <div class="comparison-head">
         <div>
           <h2>Consórcio + aluguel <em>x</em> financiamento</h2>
-          <p>A diferença mensal aplicada até a contemplação.</p>
+          <p>As sobras mensais aplicadas até o fim do financiamento.</p>
         </div>
         <span class="comparison-badge">Tesouro Selic</span>
       </div>
@@ -2226,7 +2226,7 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
         </div>
         <div class="rent-investment-period">
           <span>Período da projeção</span>
-          <strong id="rentInvestmentPeriod">Até a contemplação</strong>
+          <strong id="rentInvestmentPeriod">Até o fim do financiamento</strong>
         </div>
       </div>
 
@@ -2249,11 +2249,11 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
         <div class="compare-paired-row">
           <div class="compare-cell consorcio total">
-            <span>Total até contemplar</span>
+            <span>Total pago no período</span>
             <strong id="rentCombinedPeriodTotal">R$ 0,00</strong>
           </div>
           <div class="compare-cell financiamento total">
-            <span>Parcelas no mesmo período</span>
+            <span>Parcelas até o fim</span>
             <strong id="rentFinancePeriodTotal">R$ 0,00</strong>
           </div>
         </div>
@@ -2277,11 +2277,11 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
       <div class="rent-investment-result" id="rentInvestmentResult">
         <span id="rentInvestmentResultLabel">Saldo bruto projetado no Tesouro Selic</span>
         <strong id="rentInvestmentBalance">R$ 0,00</strong>
-        <small id="rentInvestmentResultDetail">Aportes mensais até a contemplação.</small>
+        <small id="rentInvestmentResultDetail">Aportes mensais até o fim do financiamento.</small>
       </div>
 
       <div class="rent-investment-note" id="rentInvestmentNote">
-        Projeção bruta com aportes no fim de cada mês, antes de IR e eventual custódia. Entrada do financiamento e lance não entram nos aportes. Taxa Selic de 14,00% a.a., definida pelo Copom em ago/2026, e editável acima.
+        O aluguel termina na contemplação. Depois do fim do consórcio, a parcela inteira do financiamento vira aporte. Projeção bruta antes de IR e eventual custódia.
       </div>
     </section>
 
@@ -4695,11 +4695,20 @@ function projectMonthlySavings({
   financingPayments=[],
   consortiumPayments=[],
   rentMonthly=0,
+  rentUntilMonth=null,
   months=0,
   annualRatePct=CURRENT_SELIC_ANNUAL_RATE
 }={}){
   const horizon = Math.max(Math.floor(Number(months) || 0), 0);
   const rent = Math.max(Number(rentMonthly) || 0, 0);
+  const hasRequestedRentEnd =
+    rentUntilMonth !== null &&
+    rentUntilMonth !== undefined &&
+    String(rentUntilMonth).trim() !== "";
+  const requestedRentEnd = Number(rentUntilMonth);
+  const rentEndExclusive = hasRequestedRentEnd && Number.isFinite(requestedRentEnd)
+    ? Math.max(Math.floor(requestedRentEnd), 1)
+    : horizon + 1;
   const annualRate = Math.max(Number(annualRatePct) || 0, 0) / 100;
   const monthlyRate = annualRate > 0
     ? Math.pow(1 + annualRate, 1/12) - 1
@@ -4713,9 +4722,11 @@ function projectMonthlySavings({
   let positiveMonths = 0;
 
   for(let index=0; index<horizon; index++){
+    const month = index + 1;
     const financing = Math.max(Number(financingPayments[index]) || 0, 0);
     const consortium = Math.max(Number(consortiumPayments[index]) || 0, 0);
-    const combined = consortium + rent;
+    const rentForMonth = month < rentEndExclusive ? rent : 0;
+    const combined = consortium + rentForMonth;
     const difference = financing - combined;
 
     // O saldo existente rende durante o mês. A nova sobra é aplicada
@@ -4736,14 +4747,16 @@ function projectMonthlySavings({
 
   const firstFinancing = Math.max(Number(financingPayments[0]) || 0, 0);
   const firstConsortium = Math.max(Number(consortiumPayments[0]) || 0, 0);
+  const firstRent = 1 < rentEndExclusive ? rent : 0;
 
   return {
     months:horizon,
     monthlyRate,
     firstFinancing,
     firstConsortium,
-    firstCombined:firstConsortium + rent,
-    initialDifference:firstFinancing - (firstConsortium + rent),
+    firstCombined:firstConsortium + firstRent,
+    initialDifference:firstFinancing - (firstConsortium + firstRent),
+    rentMonths:Math.min(Math.max(rentEndExclusive - 1, 0), horizon),
     totalCombined,
     totalFinancing,
     totalDifference:totalFinancing - totalCombined,
@@ -4768,7 +4781,11 @@ function renderRentInvestmentComparison({
   section.style.display = visible ? "" : "none";
   if(!visible) return;
 
-  const horizon = Math.max(Math.floor(Number(contemplationMonth) || 1), 1);
+  const horizon = Math.max(financePayments.length, 1);
+  const selectedContemplationMonth = Math.max(
+    Math.floor(Number(contemplationMonth) || 1),
+    1
+  );
   const rent = Math.max(parseLocaleNumber($("rentMonthly")?.value || "0"), 0);
   const rateText = String($("treasuryAnnualRate")?.value || "").trim();
   const annualRate = rateText
@@ -4787,12 +4804,29 @@ function renderRentInvestmentComparison({
     financingPayments:financePayments,
     consortiumPayments,
     rentMonthly:rent,
+    rentUntilMonth:selectedContemplationMonth,
     months:horizon,
     annualRatePct:annualRate
   });
 
+  const consortiumEndMonth = Math.min(
+    Math.max(
+      Math.floor(
+        Number(consortiumSchedule?.effectiveMonths) ||
+        Number(consortiumSchedule?.payments?.length) || 0
+      ),
+      0
+    ),
+    horizon
+  );
+
+  const rentEndMonth = Math.min(
+    Math.max(selectedContemplationMonth - 1, 0),
+    horizon
+  );
+
   $("rentInvestmentPeriod").textContent =
-    `Até o ${horizon}º mês • ${currentMode === "reduced" ? "parcela reduzida" : "parcela cheia"}`;
+    `Até o ${horizon}º mês • fim do financiamento`;
 
   $("rentCombinedMonthly").textContent = money(projection.firstCombined);
   $("rentFinanceMonthly").textContent = money(projection.firstFinancing);
@@ -4822,13 +4856,13 @@ function renderRentInvestmentComparison({
     ? "Saldo bruto projetado no Tesouro Selic"
     : "Sem sobra projetada para investir";
   $("rentInvestmentResultDetail").textContent = hasSurplus
-    ? `${projection.positiveMonths} aportes mensais até o ${horizon}º mês.`
-    : "Consórcio + aluguel não ficou abaixo da parcela do financiamento.";
+    ? `${projection.positiveMonths} aportes ao longo dos ${horizon} meses.`
+    : "Nenhum mês gerou diferença positiva para aplicar.";
 
   $("rentInvestmentNote").textContent =
-    `Projeção bruta com aportes no fim de cada mês, antes de IR e eventual custódia. ` +
-    `A entrada do financiamento (${money(financeDownValue)}) e eventual lance não entram nos aportes. ` +
-    `Taxa Selic de ${formatNumberBR(annualRate,2)}% a.a.; padrão atual de 14,00% a.a. (Copom, ago/2026).`;
+    `Aluguel até o ${rentEndMonth}º mês; consórcio até o ${consortiumEndMonth}º; ` +
+    `aportes até o ${horizon}º. Depois do consórcio, a parcela inteira do financiamento vira aporte. ` +
+    `Entrada (${money(financeDownValue)}) e lance não entram. Resultado bruto antes de IR/custódia.`;
 }
 
 function renderFinanceComparison({
