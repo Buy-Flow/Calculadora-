@@ -2471,6 +2471,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 /* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
@@ -2590,6 +2592,15 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 /* floating-nav-v1:start */
+/* Contemplação: um único botão abre 1º mês + anos do plano. */
+.contemplation-picker-row .period-choice{display:none!important}
+.contemplation-picker-row .contemplation-number{
+  width:100%!important;
+  flex:1 1 100%!important;
+  max-width:none!important;
+}
+#projectionModalSubtitle{display:none!important}
+
 .floating-nav-trigger{
   position:fixed;
   right:0;
@@ -3405,6 +3416,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 <!-- floating-nav-v1:start -->
 <button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
@@ -3658,10 +3671,15 @@ function projectionMaxValue(){
     : months;
 }
 
+
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
   const btn = $("projectionNumberBtn");
-  if(btn && input) btn.textContent = input.value || "1";
+  if(!btn || !input) return;
+  const raw = Math.max(parseInt(input.value || "1", 10) || 1, 1);
+  btn.textContent = projectionMode === "year"
+    ? `${raw}º ano`
+    : `${raw}º mês`;
 }
 
 function setProjectionContemplation(value, closeAccordion=true){
@@ -3678,37 +3696,56 @@ function setProjectionContemplation(value, closeAccordion=true){
   calculate();
 }
 
+
 function renderProjectionOptions(){
   const box = $("projectionOptions");
   if(!box) return;
 
-  const max = projectionMaxValue();
-  const current =
-    Math.min(
-      Math.max(parseInt($("projectionContemplation")?.value || "1",10) || 1,1),
-      max
-    );
+  const totalMonths = Math.max(parseInt($("months")?.value || "1", 10) || 1, 1);
+  const totalYears = Math.max(Math.ceil(totalMonths / 12), 1);
+  const currentMonth = projectionContemplationMonth();
 
-  if(parseInt($("projectionContemplation").value || "1",10) !== current){
-    $("projectionContemplation").value = current;
-    updateProjectionNumber();
-  }
+  let options = `
+    <button
+      type="button"
+      class="contemplation-option${currentMonth === 1 ? " active" : ""}"
+      data-projection-kind="month"
+      data-projection-value="1"
+    >1º mês</button>`;
 
-  let options = "";
-  for(let i=1;i<=max;i++){
+  for(let year=1; year<=totalYears; year++){
+    const month = Math.min(year * 12, totalMonths);
     options += `
       <button
         type="button"
-        class="contemplation-option${i === current ? " active" : ""}"
-        data-projection-value="${i}"
-      >${i}</button>`;
+        class="contemplation-option${currentMonth === month ? " active" : ""}"
+        data-projection-kind="year"
+        data-projection-value="${year}"
+      >${year}º ano</button>`;
   }
+
   box.innerHTML = options;
 
   box.querySelectorAll("[data-projection-value]").forEach(btn=>{
     btn.onclick = ()=>{
-      setProjectionContemplation(btn.dataset.projectionValue, true);
+      const kind = btn.dataset.projectionKind;
+      const value = Math.max(parseInt(btn.dataset.projectionValue || "1", 10) || 1, 1);
+
+      if(kind === "year"){
+        projectionMode = "year";
+        $("projectionContemplation").value = value;
+        $("projectionYearBtn")?.classList.add("active");
+        $("projectionMonthBtn")?.classList.remove("active");
+      }else{
+        projectionMode = "month";
+        $("projectionContemplation").value = 1;
+        $("projectionMonthBtn")?.classList.add("active");
+        $("projectionYearBtn")?.classList.remove("active");
+      }
+
+      updateProjectionNumber();
       closeProjectionModal();
+      calculate();
     };
   });
 
@@ -3718,11 +3755,11 @@ function renderProjectionOptions(){
   });
 }
 
+
 function openProjectionModal(){
   const modal = $("projectionModal");
   if(!modal) return;
-  const label = projectionMode === "year" ? "ano" : "mês";
-  $("projectionModalSubtitle").textContent = `Selecione o ${label} previsto`;
+  if($("projectionModalSubtitle")) $("projectionModalSubtitle").textContent = "";
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   renderProjectionOptions();
@@ -9170,6 +9207,10 @@ document.querySelectorAll('.money-input').forEach(el=>{
 restore();
 </script>
 <script src="./pwa-register.js" defer></script>
+<script>
+
+
+</script>
 <script>
 
 
