@@ -15,7 +15,6 @@ def replace_function(source, name, next_name, new_code):
     return source[:start] + new_code.rstrip() + '\n\n' + source[end + 1:]
 
 
-# Restaura o comportamento original: número separado dos botões Mês/Ano.
 text = replace_function(text, 'updateProjectionNumber', 'setProjectionContemplation', r'''
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
@@ -30,11 +29,10 @@ function renderProjectionOptions(){
   if(!box) return;
 
   const max = projectionMaxValue();
-  const current =
-    Math.min(
-      Math.max(parseInt($("projectionContemplation")?.value || "1",10) || 1,1),
-      max
-    );
+  const current = Math.min(
+    Math.max(parseInt($("projectionContemplation")?.value || "1",10) || 1,1),
+    max
+  );
 
   if(parseInt($("projectionContemplation").value || "1",10) !== current){
     $("projectionContemplation").value = current;
@@ -59,8 +57,6 @@ function renderProjectionOptions(){
     };
   });
 
-  // Rola somente a área interna do modal. Não usa scrollIntoView,
-  // pois no Android ele pode deslocar a página inteira para cima.
   requestAnimationFrame(()=>{
     const activeOption = box.querySelector(".contemplation-option.active");
     const scroller = box.closest(".contemplation-accordion");
@@ -85,22 +81,32 @@ function openProjectionModal(){
   const modal = $("projectionModal");
   if(!modal) return;
 
-  // Guarda a posição exata antes de abrir para impedir qualquer salto visual.
+  // Remove o modal de dentro do card antes de exibi-lo.
+  // Assim position:fixed é sempre relativo à viewport, nunca à seção.
+  if(modal.parentElement !== document.body){
+    document.body.appendChild(modal);
+  }
+
+  // Remove o foco de seções antes do primeiro frame visível do modal.
+  document.body.classList.remove("section-focus-mode");
+  document.querySelectorAll(".section-focus-active,.section-focus-dim").forEach(el=>{
+    el.classList.remove("section-focus-active","section-focus-dim");
+  });
+
   const pageY = window.scrollY || document.documentElement.scrollTop || 0;
   modal.dataset.pageScrollY = String(pageY);
+  modal.dataset.prevBodyOverflow = document.body.style.overflow || "";
+  modal.dataset.prevHtmlOverflow = document.documentElement.style.overflow || "";
+
+  // Trava o fundo sem alterar a posição da página.
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
 
   const label = projectionMode === "year" ? "ano" : "mês";
   $("projectionModalSubtitle").textContent = `Selecione o ${label} previsto`;
-  modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
+  modal.classList.add("open");
   renderProjectionOptions();
-
-  requestAnimationFrame(()=>{
-    const currentY = window.scrollY || document.documentElement.scrollTop || 0;
-    if(Math.abs(currentY - pageY) > 1){
-      window.scrollTo(0, pageY);
-    }
-  });
 }
 ''')
 
@@ -109,22 +115,14 @@ function closeProjectionModal(){
   const modal = $("projectionModal");
   if(!modal) return;
 
-  const pageY = Number(modal.dataset.pageScrollY);
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
 
-  if(Number.isFinite(pageY)){
-    requestAnimationFrame(()=>{
-      const currentY = window.scrollY || document.documentElement.scrollTop || 0;
-      if(Math.abs(currentY - pageY) > 1){
-        window.scrollTo(0, pageY);
-      }
-    });
-  }
+  document.body.style.overflow = modal.dataset.prevBodyOverflow || "";
+  document.documentElement.style.overflow = modal.dataset.prevHtmlOverflow || "";
 }
 ''')
 
-# A versão simplificada escondia os botões Mês/Ano. Reexibe no fim do CSS.
 text = re.sub(
     r'\n?/\* restore-contemplation-month-year:start \*/.*?/\* restore-contemplation-month-year:end \*/\n?',
     '\n',
@@ -134,15 +132,30 @@ text = re.sub(
 
 css = r'''
 /* restore-contemplation-month-year:start */
-.contemplation-picker-row .period-choice{
-  display:block!important;
+.contemplation-picker-row .period-choice{display:block!important}
+#projectionModalSubtitle{display:block!important}
+
+/* Modal já nasce no estado final, sem animação de posição. */
+.contemplation-modal{
+  position:fixed!important;
+  inset:0!important;
+  display:none!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  overscroll-behavior:contain!important;
+  transform:none!important;
+  transition:none!important;
 }
-#projectionModalSubtitle{
-  display:block!important;
+.contemplation-modal.open{
+  display:flex!important;
 }
-.contemplation-modal,
+.contemplation-sheet{
+  transform:none!important;
+  transition:none!important;
+  margin:0!important;
+}
 .contemplation-accordion{
-  overscroll-behavior:contain;
+  overscroll-behavior:contain!important;
 }
 /* restore-contemplation-month-year:end */
 '''
@@ -150,9 +163,8 @@ text = text.replace('</style>', css + '\n</style>', 1)
 
 index_path.write_text(text, encoding='utf-8')
 
-# Força atualização do PWA.
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v24', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v26', sw)
     sw_path.write_text(sw, encoding='utf-8')
