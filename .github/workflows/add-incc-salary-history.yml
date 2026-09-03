@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Atualizar comparativo monetário
+      - name: Atualizar comparativo monetário corrigido
         run: python scripts/add-incc-salary-history.py
       - name: Salvar alteração
         shell: bash
