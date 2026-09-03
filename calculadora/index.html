@@ -2390,20 +2390,6 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
           <span>Cada momento pode ter uma estratégia diferente: vender a contemplada, comprar patrimônio ou aproveitar o reajuste acumulado da carta.</span>
         </div>
       </div>
-      <div class="scenario-guide">
-        <div class="scenario-guide-item start">
-          <b>INÍCIO</b>
-          <span>Venda da contemplada</span>
-        </div>
-        <div class="scenario-guide-item middle">
-          <b>MEIO</b>
-          <span>Comprar patrimônio</span>
-        </div>
-        <div class="scenario-guide-item end">
-          <b>FIM</b>
-          <span>Crédito reajustado</span>
-        </div>
-      </div>
 <div class="scenario-scroll" id="contemplationScenarios"></div>
     </section>
 
@@ -4354,10 +4340,6 @@ function renderContemplationScenarios({
             <span>Valor de transferência</span>
             <b>A negociar</b>
           </div>
-          <div class="scenario-simple-metric" style="grid-column:1 / -1">
-            <span>Saldo devedor no cenário</span>
-            <b>${money(s.balance)}</b>
-          </div>
         </div>
 
         <div class="scenario-ideas">
@@ -4381,11 +4363,6 @@ function renderContemplationScenarios({
 
         <div class="scenario-simple-warning">
           A transferência depende da aprovação da administradora e não possui ágio fixo de 30%. O valor é negociado entre as partes.
-        </div>
-
-        <div class="scenario-simple-explain">
-          <b>Na prática</b><br>
-          No início, a vantagem é ter mais tempo para usar o crédito, adquirir o bem ou negociar a transferência da cota conforme as regras do grupo.
         </div>`;
     }else if(s.type === "middle"){
       hook = "ESTRATÉGIA: COMPRAR PATRIMÔNIO";
@@ -4398,10 +4375,6 @@ function renderContemplationScenarios({
           <div class="scenario-simple-metric">
             <span>Crédito disponível para comprar</span>
             <b>${money(s.cartaAtual)}</b>
-          </div>
-          <div class="scenario-simple-metric">
-            <span>Tempo restante no plano</span>
-            <b>${remainingMonths} meses${remainingYears >= 1 ? ` • ${formatNumberBR(remainingYears,1)} anos` : ""}</b>
           </div>
           <div class="scenario-simple-metric" style="grid-column:1 / -1">
             <span>Valor que a carta já aumentou até aqui</span>
@@ -4426,11 +4399,6 @@ function renderContemplationScenarios({
             <div class="icon">🛠️</div>
             <div class="txt"><b>Equipamentos e estrutura</b><span>Máquinas, reforma ou expansão.</span></div>
           </div>
-        </div>
-
-        <div class="scenario-simple-explain">
-          <b>Na prática</b><br>
-          No meio do plano, a vantagem é equilibrar uma carta já reajustada com bastante tempo para usar o crédito e transformar isso em patrimônio.
         </div>`;
     }else{
       hook = "ESTRATÉGIA: APROVEITAR O REAJUSTE";
@@ -4472,11 +4440,6 @@ function renderContemplationScenarios({
             <div class="icon">💼</div>
             <div class="txt"><b>Reserva ou negócio</b><span>Aplicar com estratégia.</span></div>
           </div>
-        </div>
-
-        <div class="scenario-simple-explain">
-          <b>Na prática</b><br>
-          No fim do plano, compare o crédito reajustado com o total pago e considere o crédito líquido indicado para a modalidade escolhida.
         </div>`;
     }
 
