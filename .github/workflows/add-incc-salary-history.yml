@@ -1,4 +1,4 @@
-name: Atualizar comparativo INCC e salário em reais
+name: Atualizar comparativo INCC e legibilidade
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - '.github/workflows/add-incc-salary-history.yml'
       - 'scripts/add-incc-salary-history.py'
       - 'scripts/refine-incc-table.py'
+      - 'scripts/improve-readability.py'
   workflow_dispatch:
 
 permissions:
@@ -34,6 +35,9 @@ jobs:
       - name: Refinar design da tabela e mostrar quem subiu mais
         run: python scripts/refine-incc-table.py
 
+      - name: Aumentar legibilidade geral e reduzir microtexto
+        run: python scripts/improve-readability.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -43,7 +47,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Centralizar tabela INCC e fixar cabeçalho"
+            git commit -m "Aumentar fontes e simplificar explicações"
             git push
           fi
 
