@@ -4064,6 +4064,11 @@ function renderYearProjectionV166({
   let paidAccum = 0;
   let htmlRows = "";
   const totalYears = Math.ceil(effectiveMonths / 12);
+  const originalCredit = Math.max(Number(credit) || 0, 0);
+  const totalReservePaid = schedule.payments.reduce(
+    (sum,item) => sum + (Number(item.reservePayment) || 0),
+    0
+  );
 
   for(let yearIndex=0; yearIndex<totalYears; yearIndex++){
     const yearNo = yearIndex + 1;
@@ -4086,28 +4091,29 @@ function renderYearProjectionV166({
     const preInYear = [...rows].reverse().find(item => item.month < contemplationMonth);
     const postInYear = rows.find(item => item.month >= contemplationMonth);
     const summaryParcelText =
-      isContemplationYear && preInYear && postInYear &&
+      isContemplationYear && !schedule.finalSettlement && preInYear && postInYear &&
       Math.abs(preInYear.totalPayment - postInYear.totalPayment) > 0.01
         ? `${money(preInYear.totalPayment)} → ${money(postInYear.totalPayment)}`
         : money(lastPayment);
 
     const badgeHtml = isContemplationYear
-      ? '<span class="proj2-badge contemplacao">🏆 Cenário</span>'
+      ? '<span class="proj2-badge contemplacao">🏆 Contemplação</span>'
       : (afterContemplation
           ? '<span class="proj2-badge lucro">Pós-contemplação</span>'
           : '');
     const itemClass = isContemplationYear
       ? 'proj2-item contemplacao'
       : (afterContemplation ? 'proj2-item lucro' : 'proj2-item');
-    const endPayment = rows[rows.length - 1];
-    const creditValue = endMonth >= contemplationMonth
+    const contemplationApplied = endMonth >= contemplationMonth;
+    const creditValue = contemplationApplied
       ? schedule.creditAtContemplation
       : projectedCreditAtMonth(credit, endMonth);
-    const balanceAfter = Math.max(
-      (endPayment?.totalBalanceBeforePayment || 0) -
-      (endPayment?.basePayment || 0),
-      0
-    );
+    const accumulatedAdjustment = Math.max(creditValue - originalCredit, 0);
+    const paidWithCashLance = paidAccum + schedule.cashLanceApplied;
+    const finalMonthReducedSettlement =
+      currentMode === "reduced" &&
+      contemplationMonth === totalMonths &&
+      !!schedule.finalSettlement;
 
     htmlRows += `
       <div class="${itemClass}">
@@ -4124,18 +4130,89 @@ function renderYearProjectionV166({
           </summary>
           <div class="proj2-body">
             <div class="proj2-grid">
-              <div class="proj2-row"><span>Faixa de meses</span><strong>${startMonth} → ${endMonth}</strong></div>
-              <div class="proj2-row"><span>Parcela no fim do período</span><strong>${money(lastPayment)}</strong></div>
-              <div class="proj2-row"><span>Pago neste ano</span><strong>${money(paidThisYear)}</strong></div>
-              <div class="proj2-row"><span>Pago em parcelas até aqui</span><strong>${money(paidAccum)}</strong></div>
-              <div class="proj2-row"><span>${endMonth >= contemplationMonth ? "Valor contemplado" : "Carta reajustada"}</span><strong class="blue">${money(creditValue)}</strong></div>
-              <div class="proj2-row"><span>Saldo devedor estimado</span><strong>${money(balanceAfter)}</strong></div>
-              ${isContemplationYear && schedule.lanceApplied > 0 ? `
-                <div class="proj2-row"><span>Lance aplicado ao saldo</span><strong class="green">− ${money(schedule.lanceApplied)}</strong></div>
+              <div class="proj2-row">
+                <span>Meses no período</span>
+                <strong>${rows.length} (acum. ${endMonth})</strong>
+              </div>
+
+              <div class="proj2-row">
+                <span>Faixa de meses</span>
+                <strong>${startMonth} → ${endMonth}</strong>
+              </div>
+
+              <div class="proj2-row">
+                <span>Parcela do ano</span>
+                <strong>${money(lastPayment)}</strong>
+              </div>
+
+              <div class="proj2-row">
+                <span>Pago neste ano</span>
+                <strong>${money(paidThisYear)}</strong>
+              </div>
+
+              <div class="proj2-row">
+                <span>Pago em parcelas até aqui</span>
+                <strong>${money(paidAccum)}</strong>
+              </div>
+
+              ${!contemplationApplied ? `
+              <div class="proj2-row">
+                <span>Quanto a carta aumentou até aqui</span>
+                <strong class="green">+ ${money(accumulatedAdjustment)}</strong>
+              </div>
               ` : ``}
-              ${rows.some(item => item.insurancePayment > 0) ? `
-                <div class="proj2-row"><span>Seguro no fim do período</span><strong>${money(endPayment?.insurancePayment || 0)}</strong></div>
+
+              <div class="proj2-row">
+                <span>${contemplationApplied ? "Valor contemplado" : "Valor atualizado da carta"}</span>
+                <strong class="blue">${money(creditValue)}</strong>
+              </div>
+
+              ${isContemplationYear ? `
+              ${
+                contemplationMonth >
+                (Math.ceil(totalMonths / 12) - 1) * 12
+                  ? ``
+                  : `
+              <div class="proj2-row">
+                <span>Reajuste da carta até a contemplação</span>
+                <strong class="green">${money(accumulatedAdjustment)}</strong>
+              </div>
+              `
+              }
+
+              ${finalMonthReducedSettlement ? `
+              ${totalReservePaid > 0.01 ? `
+              <div class="proj2-row">
+                <span>Fundo de reserva pago (não amortiza a carta)</span>
+                <strong>${money(totalReservePaid)}</strong>
+              </div>
               ` : ``}
+
+              <div class="proj2-row">
+                <span>Diferença da reduzida a descontar</span>
+                <strong class="red">− ${money(schedule.finalSettlement?.unpaidCredit || 0)}</strong>
+              </div>
+
+              <div class="proj2-row">
+                <span>Crédito líquido disponível</span>
+                <strong class="green">${money(schedule.finalSettlement?.liquidCredit || 0)}</strong>
+              </div>
+              ` : `
+              ${paidWithCashLance > creditValue ? `
+              <div class="proj2-row">
+                <span>Pago a mais que o valor contemplado</span>
+                <strong>${money(paidWithCashLance - creditValue)}</strong>
+              </div>
+              ` : ``}
+              `}
+              ` : (
+                contemplationApplied && paidWithCashLance > creditValue ? `
+              <div class="proj2-row">
+                <span>Pago a mais que o valor contemplado</span>
+                <strong>${money(paidWithCashLance - creditValue)}</strong>
+              </div>
+              ` : ``
+              )}
             </div>
           </div>
         </details>
@@ -4184,18 +4261,26 @@ function renderYearProjectionV166({
   $("projectionRateHint").textContent =
     `${indexName} estimado ao ano`;
 
+  const contemplationStateForNote = balanceAtContemplation({
+    credit,
+    feePct,
+    reservePct,
+    months:totalMonths,
+    contemplatedMonth:contemplationMonth
+  });
+
   const modeNote = $("projectionModeNote");
   if(modeNote){
     modeNote.classList.toggle("reduced", currentMode === "reduced");
     if(finalSettlement){
       modeNote.innerHTML =
-        `<b>Último mês:</b> a parte ainda não integralizada do fundo comum, <b>${money(finalSettlement.unpaidCredit)}</b>, foi descontada da carta. Crédito líquido estimado: <b>${money(finalSettlement.liquidCredit)}</b>.`;
+        `<b>Contemplação no último mês:</b> você paga a parcela reduzida normalmente. A soma de <b>parcela cheia − parcela reduzida</b> ao longo do plano é <b>${money(finalSettlement.unpaidCredit)}</b>; esse valor é abatido da carta, deixando <b>${money(finalSettlement.liquidCredit)}</b> líquidos.`;
     }else if(currentMode === "reduced"){
       modeNote.innerHTML =
-        `<b>Parcela reduzida:</b> após a contemplação, a diferença não paga do fundo comum permanece no saldo e é distribuída no prazo restante. Reajustes futuros incidem sobre o saldo devedor.`;
+        `<b>Parcela reduzida:</b> ${money(contemplationStateForNote.deferredDifference)} ficou para trás em relação à parcela cheia. Após a contemplação, essa diferença compõe um saldo devedor maior; por isso os reajustes seguintes podem fazer o total final pago ficar maior que na parcela cheia.`;
     }else{
       modeNote.innerHTML =
-        `<b>Parcela cheia:</b> carta, taxa administrativa e fundo de reserva acompanham o reajuste. Após a contemplação, o valor da carta fica congelado e o saldo restante continua sendo atualizado.`;
+        `<b>Parcela cheia:</b> antes da contemplação a carta acompanha o reajuste. Depois da contemplação, o valor contemplado fica congelado e os novos reajustes incidem somente sobre o saldo devedor restante.`;
     }
   }
 
