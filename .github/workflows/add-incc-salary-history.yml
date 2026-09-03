@@ -13,6 +13,7 @@ on:
       - 'scripts/remove-aportes-menu.py'
       - 'scripts/add-section-focus.py'
       - 'scripts/restore-simulation-typography.py'
+      - 'scripts/restore-contemplation-month-year.py'
   workflow_dispatch:
 
 permissions:
@@ -58,6 +59,9 @@ jobs:
       - name: Restaurar tipografia original da simulação
         run: python scripts/restore-simulation-typography.py
 
+      - name: Restaurar seleção Mês/Ano da contemplação
+        run: python scripts/restore-contemplation-month-year.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -67,7 +71,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Restaurar tipografia original da simulação"
+            git commit -m "Restaurar seleção de mês e ano da contemplação"
             git push
           fi
 
