@@ -29,6 +29,9 @@ jobs:
       - name: Atualizar comparativo para cliente e mobile
         run: python scripts/add-incc-salary-history.py
 
+      - name: Refinar design da tabela e mostrar quem subiu mais
+        run: python scripts/refine-incc-table.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -38,7 +41,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Melhorar INCC para cliente e corrigir tabela mobile"
+            git commit -m "Melhorar tabela INCC e mostrar vencedor anual"
             git push
           fi
 
