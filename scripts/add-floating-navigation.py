@@ -4,6 +4,99 @@ import re
 index_path = Path('calculadora/index.html')
 text = index_path.read_text(encoding='utf-8')
 
+# Deixa o seletor de contemplação simples: 1º mês + cada ano do plano.
+def replace_function(source, name, next_name, new_code):
+    start = source.find(f'function {name}(')
+    if start == -1:
+        return source
+    end = source.find(f'\nfunction {next_name}(', start)
+    if end == -1:
+        return source
+    return source[:start] + new_code.rstrip() + '\n\n' + source[end + 1:]
+
+text = replace_function(text, 'updateProjectionNumber', 'setProjectionContemplation', r'''
+function updateProjectionNumber(){
+  const input = $("projectionContemplation");
+  const btn = $("projectionNumberBtn");
+  if(!btn || !input) return;
+  const raw = Math.max(parseInt(input.value || "1", 10) || 1, 1);
+  btn.textContent = projectionMode === "year"
+    ? `${raw}º ano`
+    : `${raw}º mês`;
+}
+''')
+
+text = replace_function(text, 'renderProjectionOptions', 'openProjectionModal', r'''
+function renderProjectionOptions(){
+  const box = $("projectionOptions");
+  if(!box) return;
+
+  const totalMonths = Math.max(parseInt($("months")?.value || "1", 10) || 1, 1);
+  const totalYears = Math.max(Math.ceil(totalMonths / 12), 1);
+  const currentMonth = projectionContemplationMonth();
+
+  let options = `
+    <button
+      type="button"
+      class="contemplation-option${currentMonth === 1 ? " active" : ""}"
+      data-projection-kind="month"
+      data-projection-value="1"
+    >1º mês</button>`;
+
+  for(let year=1; year<=totalYears; year++){
+    const month = Math.min(year * 12, totalMonths);
+    options += `
+      <button
+        type="button"
+        class="contemplation-option${currentMonth === month ? " active" : ""}"
+        data-projection-kind="year"
+        data-projection-value="${year}"
+      >${year}º ano</button>`;
+  }
+
+  box.innerHTML = options;
+
+  box.querySelectorAll("[data-projection-value]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const kind = btn.dataset.projectionKind;
+      const value = Math.max(parseInt(btn.dataset.projectionValue || "1", 10) || 1, 1);
+
+      if(kind === "year"){
+        projectionMode = "year";
+        $("projectionContemplation").value = value;
+        $("projectionYearBtn")?.classList.add("active");
+        $("projectionMonthBtn")?.classList.remove("active");
+      }else{
+        projectionMode = "month";
+        $("projectionContemplation").value = 1;
+        $("projectionMonthBtn")?.classList.add("active");
+        $("projectionYearBtn")?.classList.remove("active");
+      }
+
+      updateProjectionNumber();
+      closeProjectionModal();
+      calculate();
+    };
+  });
+
+  requestAnimationFrame(()=>{
+    box.querySelector(".contemplation-option.active")
+      ?.scrollIntoView({block:"nearest", inline:"nearest"});
+  });
+}
+''')
+
+text = replace_function(text, 'openProjectionModal', 'closeProjectionModal', r'''
+function openProjectionModal(){
+  const modal = $("projectionModal");
+  if(!modal) return;
+  if($("projectionModalSubtitle")) $("projectionModalSubtitle").textContent = "";
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  renderProjectionOptions();
+}
+''')
+
 # Remove versões anteriores do menu flutuante.
 text = re.sub(r'\n?<!-- floating-nav-v1:start -->.*?<!-- floating-nav-v1:end -->\n?', '\n', text, flags=re.S)
 text = re.sub(r'\n?/\* floating-nav-v1:start \*/.*?/\* floating-nav-v1:end \*/\n?', '\n', text, flags=re.S)
@@ -11,6 +104,15 @@ text = re.sub(r'\n?/\* floating-nav-v1-js:start \*/.*?/\* floating-nav-v1-js:end
 
 css = r'''
 /* floating-nav-v1:start */
+/* Contemplação: um único botão abre 1º mês + anos do plano. */
+.contemplation-picker-row .period-choice{display:none!important}
+.contemplation-picker-row .contemplation-number{
+  width:100%!important;
+  flex:1 1 100%!important;
+  max-width:none!important;
+}
+#projectionModalSubtitle{display:none!important}
+
 .floating-nav-trigger{
   position:fixed;
   right:0;
@@ -292,5 +394,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v15', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v16', sw)
     sw_path.write_text(sw, encoding='utf-8')
