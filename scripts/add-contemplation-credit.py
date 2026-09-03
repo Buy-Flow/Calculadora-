@@ -4,13 +4,12 @@ import re
 index_path = Path('calculadora/index.html')
 text = index_path.read_text(encoding='utf-8')
 
-# Remove qualquer versão anterior do ajuste de crédito.
+# Remove qualquer versão anterior dos controles rápidos do menu.
 text = re.sub(r'\n?<!-- contemplation-credit-v1:start -->.*?<!-- contemplation-credit-v1:end -->\n?', '\n', text, flags=re.S)
 text = re.sub(r'\n?/\* contemplation-credit-v1:start \*/.*?/\* contemplation-credit-v1:end \*/\n?', '\n', text, flags=re.S)
 text = re.sub(r'\n?/\* contemplation-credit-v1-js:start \*/.*?/\* contemplation-credit-v1-js:end \*/\n?', '\n', text, flags=re.S)
 
-# O crédito não deve aparecer dentro do pop-up de contemplação.
-# Ele fica somente na tela principal e no menu lateral.
+# O crédito fica no menu lateral, nunca dentro do pop-up de contemplação.
 credit_html = r'''
 <!-- contemplation-credit-v1:start -->
 <div class="floating-nav-credit" id="floatingNavCredit">
@@ -40,10 +39,28 @@ credit_html = r'''
 <!-- contemplation-credit-v1:end -->
 '''
 
-# Insere o ajuste logo antes do atalho Contemplação prevista.
 anchor = '    <button class="floating-nav-item contemplation-shortcut"'
 if anchor in text and 'id="floatingNavCredit"' not in text:
     text = text.replace(anchor, credit_html + '\n' + anchor, 1)
+
+# Transforma Contemplação prevista em um controle rápido sempre visível.
+# O título continua abrindo o seletor completo; os chips alteram direto.
+contemplation_html = r'''
+<div class="floating-nav-contemplation" id="floatingNavContemplation">
+  <button class="floating-nav-contemplation-head" type="button" data-nav-action="contemplation">
+    <span class="floating-nav-item-icon">📅</span>
+    <span>Contemplação prevista</span>
+  </button>
+  <div class="floating-nav-contemplation-shortcuts" id="navContemplationShortcuts"></div>
+</div>
+'''
+text = re.sub(
+    r'    <button class="floating-nav-item contemplation-shortcut".*?</button>',
+    contemplation_html.rstrip(),
+    text,
+    count=1,
+    flags=re.S,
+)
 
 css = r'''
 /* contemplation-credit-v1:start */
@@ -55,7 +72,8 @@ css = r'''
 }
 
 /* Crédito rápido dentro do menu lateral. */
-.floating-nav-credit{
+.floating-nav-credit,
+.floating-nav-contemplation{
   width:100%;
   padding:9px;
   border:1px solid #e4e7ec;
@@ -115,19 +133,70 @@ css = r'''
   font-size:10px;
   font-weight:950;
 }
-.floating-nav-credit-shortcuts{
+.floating-nav-credit-shortcuts,
+.floating-nav-contemplation-shortcuts{
   display:flex;
   gap:5px;
   overflow-x:auto;
-  padding-top:6px;
   scrollbar-width:none;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
 }
-.floating-nav-credit-shortcuts::-webkit-scrollbar{display:none}
+.floating-nav-credit-shortcuts{padding-top:6px}
+.floating-nav-credit-shortcuts::-webkit-scrollbar,
+.floating-nav-contemplation-shortcuts::-webkit-scrollbar{display:none}
 .floating-nav-credit-shortcuts .credit-chip{
   flex:0 0 auto;
   padding:5px 7px;
   font-size:9.5px!important;
   border-radius:999px;
+}
+
+/* Contemplação rápida: título + chips horizontais, igual aos atalhos da carta. */
+.floating-nav-contemplation{
+  border-color:#fecaca;
+  box-shadow:0 4px 12px rgba(200,22,29,.08);
+}
+.floating-nav-contemplation-head{
+  width:100%;
+  min-height:34px;
+  padding:0 1px 7px;
+  border:0;
+  background:transparent;
+  color:#101828;
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  align-items:center;
+  text-align:left;
+  font-size:12px;
+  line-height:1.08;
+  font-weight:900;
+}
+.floating-nav-contemplation-head .floating-nav-item-icon{
+  background:#fff5f5;
+  border-color:#fee2e2;
+}
+.floating-nav-contemplation-shortcuts{
+  padding:1px 0 0;
+}
+.floating-nav-contemplation-chip{
+  flex:0 0 auto;
+  min-height:30px;
+  padding:5px 9px;
+  border:1px solid #e4e7ec;
+  border-radius:999px;
+  background:#fff;
+  color:#475467;
+  font-size:10px;
+  line-height:1;
+  font-weight:900;
+  white-space:nowrap;
+}
+.floating-nav-contemplation-chip.active{
+  background:#fff1f2;
+  border-color:#efc5c8;
+  color:#c8161d;
 }
 /* contemplation-credit-v1:end */
 '''
@@ -139,6 +208,7 @@ js = r'''
   const quick = document.getElementById('navCreditQuick');
   const source = document.getElementById('credit');
   const quickShortcuts = document.getElementById('navCreditShortcuts');
+  const contemplationShortcuts = document.getElementById('navContemplationShortcuts');
   const panel = document.getElementById('floatingNavPanel');
   const trigger = document.getElementById('floatingNavTrigger');
   if(!quick || !source) return;
@@ -168,21 +238,96 @@ js = r'''
       button.disabled = !!mainButton.disabled;
       button.addEventListener('click', () => {
         mainButton.click();
-        refreshMenuCredit();
+        refreshMenuControls();
       });
       quickShortcuts.appendChild(button);
     });
   };
 
-  const refreshMenuCredit = () => {
+  const renderContemplationShortcuts = () => {
+    if(!contemplationShortcuts) return;
+
+    const monthsInput = document.getElementById('months');
+    const projectionInput = document.getElementById('projectionContemplation');
+    const totalMonths = Math.max(parseInt(monthsInput?.value || '1', 10) || 1, 1);
+    const totalYears = Math.max(Math.ceil(totalMonths / 12), 1);
+    const currentMonth = typeof projectionContemplationMonth === 'function'
+      ? projectionContemplationMonth()
+      : 1;
+
+    const items = [
+      {kind:'month', value:1, month:1, label:'1º mês'}
+    ];
+
+    for(let year=1; year<=totalYears; year++){
+      items.push({
+        kind:'year',
+        value:year,
+        month:Math.min(year * 12, totalMonths),
+        label:`${year}º ano`
+      });
+    }
+
+    contemplationShortcuts.innerHTML = '';
+
+    items.forEach(item => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'floating-nav-contemplation-chip' +
+        (currentMonth === item.month ? ' active' : '');
+      button.textContent = item.label;
+      button.dataset.kind = item.kind;
+      button.dataset.value = String(item.value);
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if(!projectionInput) return;
+
+        projectionMode = item.kind === 'year' ? 'year' : 'month';
+        projectionInput.value = String(item.value);
+
+        document.getElementById('projectionYearBtn')?.classList.toggle('active', projectionMode === 'year');
+        document.getElementById('projectionMonthBtn')?.classList.toggle('active', projectionMode === 'month');
+
+        if(typeof updateProjectionNumber === 'function'){
+          updateProjectionNumber();
+        }
+        if(typeof calculate === 'function'){
+          calculate();
+        }
+
+        renderContemplationShortcuts();
+      });
+
+      contemplationShortcuts.appendChild(button);
+    });
+
+    requestAnimationFrame(() => {
+      const activeChip = contemplationShortcuts.querySelector('.floating-nav-contemplation-chip.active');
+      if(!activeChip) return;
+      const left = activeChip.offsetLeft;
+      const right = left + activeChip.offsetWidth;
+      const visibleLeft = contemplationShortcuts.scrollLeft;
+      const visibleRight = visibleLeft + contemplationShortcuts.clientWidth;
+      if(left < visibleLeft){
+        contemplationShortcuts.scrollLeft = Math.max(left - 6, 0);
+      }else if(right > visibleRight){
+        contemplationShortcuts.scrollLeft = Math.max(right - contemplationShortcuts.clientWidth + 6, 0);
+      }
+    });
+  };
+
+  const refreshMenuControls = () => {
     syncFromMain();
     renderQuickShortcuts();
+    renderContemplationShortcuts();
   };
 
   const applyQuickCredit = () => {
     const raw = quick.value;
     if(!raw || !String(raw).trim()){
-      refreshMenuCredit();
+      refreshMenuControls();
       return;
     }
 
@@ -200,7 +345,7 @@ js = r'''
       calculate();
     }
 
-    refreshMenuCredit();
+    refreshMenuControls();
   };
 
   document.querySelectorAll('#floatingNavCredit [data-main-credit-step]').forEach(button => {
@@ -209,16 +354,16 @@ js = r'''
       const mainButton = mainId ? document.getElementById(mainId) : null;
       if(mainButton){
         mainButton.click();
-        refreshMenuCredit();
+        refreshMenuControls();
       }
     });
   });
 
-  trigger?.addEventListener('click', () => requestAnimationFrame(refreshMenuCredit));
+  trigger?.addEventListener('click', () => requestAnimationFrame(refreshMenuControls));
 
   if(panel && 'MutationObserver' in window){
     const observer = new MutationObserver(() => {
-      if(panel.classList.contains('open')) refreshMenuCredit();
+      if(panel.classList.contains('open')) refreshMenuControls();
     });
     observer.observe(panel, {attributes:true, attributeFilter:['class']});
   }
@@ -233,8 +378,8 @@ js = r'''
     }
   });
 
-  source.addEventListener('change', refreshMenuCredit);
-  refreshMenuCredit();
+  source.addEventListener('change', refreshMenuControls);
+  refreshMenuControls();
 })();
 /* contemplation-credit-v1-js:end */
 '''
@@ -245,5 +390,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v23', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v27', sw)
     sw_path.write_text(sw, encoding='utf-8')
