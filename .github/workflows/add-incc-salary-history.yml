@@ -10,6 +10,7 @@ on:
       - 'scripts/improve-readability.py'
       - 'scripts/add-floating-navigation.py'
       - 'scripts/add-contemplation-credit.py'
+      - 'scripts/remove-aportes-menu.py'
   workflow_dispatch:
 
 permissions:
@@ -46,6 +47,9 @@ jobs:
       - name: Adicionar ajuste de crédito na contemplação
         run: python scripts/add-contemplation-credit.py
 
+      - name: Remover Aportes do menu lateral
+        run: python scripts/remove-aportes-menu.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -55,7 +59,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Adicionar crédito na contemplação prevista"
+            git commit -m "Remover Aportes do menu lateral"
             git push
           fi
 
