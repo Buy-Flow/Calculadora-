@@ -54,14 +54,28 @@ function renderProjectionOptions(){
 
   box.querySelectorAll("[data-projection-value]").forEach(btn=>{
     btn.onclick = ()=>{
-      setProjectionContemplation(btn.dataset.projectionValue, true);
+      setProjectionContemplation(btn.dataset.projectionValue, false);
       closeProjectionModal();
     };
   });
 
+  // Rola somente a área interna do modal. Não usa scrollIntoView,
+  // pois no Android ele pode deslocar a página inteira para cima.
   requestAnimationFrame(()=>{
-    box.querySelector(".contemplation-option.active")
-      ?.scrollIntoView({block:"nearest", inline:"nearest"});
+    const activeOption = box.querySelector(".contemplation-option.active");
+    const scroller = box.closest(".contemplation-accordion");
+    if(!activeOption || !scroller) return;
+
+    const optionTop = activeOption.offsetTop;
+    const optionBottom = optionTop + activeOption.offsetHeight;
+    const visibleTop = scroller.scrollTop;
+    const visibleBottom = visibleTop + scroller.clientHeight;
+
+    if(optionTop < visibleTop){
+      scroller.scrollTop = Math.max(optionTop - 8, 0);
+    }else if(optionBottom > visibleBottom){
+      scroller.scrollTop = Math.max(optionBottom - scroller.clientHeight + 8, 0);
+    }
   });
 }
 ''')
@@ -70,11 +84,43 @@ text = replace_function(text, 'openProjectionModal', 'closeProjectionModal', r''
 function openProjectionModal(){
   const modal = $("projectionModal");
   if(!modal) return;
+
+  // Guarda a posição exata antes de abrir para impedir qualquer salto visual.
+  const pageY = window.scrollY || document.documentElement.scrollTop || 0;
+  modal.dataset.pageScrollY = String(pageY);
+
   const label = projectionMode === "year" ? "ano" : "mês";
   $("projectionModalSubtitle").textContent = `Selecione o ${label} previsto`;
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   renderProjectionOptions();
+
+  requestAnimationFrame(()=>{
+    const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+    if(Math.abs(currentY - pageY) > 1){
+      window.scrollTo(0, pageY);
+    }
+  });
+}
+''')
+
+text = replace_function(text, 'closeProjectionModal', 'toggleProjectionAccordion', r'''
+function closeProjectionModal(){
+  const modal = $("projectionModal");
+  if(!modal) return;
+
+  const pageY = Number(modal.dataset.pageScrollY);
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+
+  if(Number.isFinite(pageY)){
+    requestAnimationFrame(()=>{
+      const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+      if(Math.abs(currentY - pageY) > 1){
+        window.scrollTo(0, pageY);
+      }
+    });
+  }
 }
 ''')
 
@@ -94,6 +140,10 @@ css = r'''
 #projectionModalSubtitle{
   display:block!important;
 }
+.contemplation-modal,
+.contemplation-accordion{
+  overscroll-behavior:contain;
+}
 /* restore-contemplation-month-year:end */
 '''
 text = text.replace('</style>', css + '\n</style>', 1)
@@ -104,5 +154,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v23', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v24', sw)
     sw_path.write_text(sw, encoding='utf-8')
