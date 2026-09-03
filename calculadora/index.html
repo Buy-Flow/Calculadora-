@@ -2499,6 +2499,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 /* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
@@ -2893,7 +2895,7 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 .floating-nav-contemplation-chip{
   flex:0 0 auto;
   min-height:30px;
-  padding:5px 9px;
+  padding:5px 8px;
   border:1px solid #e4e7ec;
   border-radius:999px;
   background:#fff;
@@ -3693,6 +3695,8 @@ body.section-focus-mode .section.section-focus-active{
 
 
 
+
+
 <!-- floating-nav-v1:start -->
 <button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
@@ -3996,6 +4000,8 @@ function projectionMaxValue(){
 
 
 
+
+
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
   const btn = $("projectionNumberBtn");
@@ -4015,6 +4021,8 @@ function setProjectionContemplation(value, closeAccordion=true){
 
   calculate();
 }
+
+
 
 
 
@@ -9719,6 +9727,18 @@ restore();
 </script>
 <script>
 
+
+</script>
+<script>
+
+
+</script>
+<script>
+
+
+</script>
+<script>
+
 /* floating-nav-v1-js:start */
 (function(){
   const trigger = document.getElementById('floatingNavTrigger');
@@ -9854,7 +9874,7 @@ restore();
       : 1;
 
     const items = [
-      {kind:'month', value:1, month:1, label:'1º mês'}
+      {kind:'month', value:1, month:1, label:'1º m'}
     ];
 
     for(let year=1; year<=totalYears; year++){
@@ -9862,7 +9882,7 @@ restore();
         kind:'year',
         value:year,
         month:Math.min(year * 12, totalMonths),
-        label:`${year}º ano`
+        label:`${year}º`
       });
     }
 
