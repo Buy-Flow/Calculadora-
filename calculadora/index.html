@@ -2367,27 +2367,12 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
         <strong id="compareTotalDifference">R$ 0,00 a mais</strong>
       </div>
 
-      <div class="compare-strategy">
-        <div class="compare-strategy-item">
-          <b>Financiamento</b>
-          Antecipa a compra e cobra juros pelo capital e pelo prazo.
-        </div>
-        <div class="compare-strategy-item">
-          <b>Consórcio</b>
-          Planeja a compra com taxa administrativa e contemplação ao longo do grupo.
-        </div>
-      </div>
-
-      <div class="compare-note">
-        Comparação ilustrativa. Financiamento calculado pelo sistema Price com a taxa anual efetiva informada, convertida para a taxa mensal equivalente, sem CET, tarifas, seguros ou impostos adicionais. O custo base do consórcio considera carta + taxa administrativa + fundo de reserva e não inclui reajustes futuros.
-      </div>
     </section>
 
     <section class="card contemplation-scenarios section">
       <div class="scenario-section-head">
         <div>
           <h2>O que fazer se contemplar no início, meio ou fim?</h2>
-          <span>Cada momento pode ter uma estratégia diferente: vender a contemplada, comprar patrimônio ou aproveitar o reajuste acumulado da carta.</span>
         </div>
       </div>
 <div class="scenario-scroll" id="contemplationScenarios"></div>
@@ -5193,30 +5178,6 @@ function renderFinanceComparison({
       ? `${money(totalDifference)} a mais`
       : `${money(Math.abs(totalDifference))} a menos`;
 
-  const note =
-    document.querySelector(".comparison-section .compare-note");
-
-  if(note){
-    const consortiumReferenceText = financeUseContemplatedValue
-      ? `valor contemplado projetado no ${contemplationMonth}º mês`
-      : "crédito disponível hoje";
-
-    const financeReferenceText =
-      financeComparisonFull && financeUseContemplatedValue && !financeComparisonSync
-        ? "crédito disponível hoje no financiamento"
-        : consortiumReferenceText;
-
-    const embeddedText =
-      embeddedAtReference > 0
-        ? ` Já desconta ${money(embeddedAtReference)} de lance embutido da carta bruta do consórcio.`
-        : "";
-
-    const financeSystemText = financeSystem === "sac" ? "SAC" : "Price";
-
-    note.textContent = financeComparisonFull
-      ? `Consórcio usando ${consortiumReferenceText}: ${money(consortiumComparisonCredit)}. Financiamento usando ${financeReferenceText}: ${money(financeComparisonCredit)}, sistema ${financeSystemText}, com custos iniciais, correção mensal equivalente à taxa anual informada e encargos médios mensais.${embeddedText}`
-      : `Comparação usando o crédito disponível hoje. Financiamento no sistema ${financeSystemText}. No modo Base, não entram custos iniciais, correção do saldo nem encargos mensais.`;
-  }
 }
 
 function renderCreditShortcuts(){
