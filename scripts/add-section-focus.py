@@ -72,7 +72,7 @@ js = r'''
   };
 
   const modalIsOpen = () => !!document.querySelector(
-    'dialog[open], .projection-modal.open, .modal.open, [role="dialog"][aria-hidden="false"]'
+    'dialog[open], .projection-modal.open, .contemplation-modal.open, .modal.open, [role="dialog"][aria-hidden="false"]'
   );
 
   const updateFocus = () => {
@@ -149,9 +149,9 @@ text = text.replace('</body>', '<script>\n' + js + '\n</script>\n</body>', 1)
 
 index_path.write_text(text, encoding='utf-8')
 
-# Força o PWA a buscar a versão nova.
+# A versão final do cache é definida pelo último patch do workflow.
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v20', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v23', sw)
     sw_path.write_text(sw, encoding='utf-8')
