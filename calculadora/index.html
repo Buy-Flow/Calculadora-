@@ -2204,87 +2204,6 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 <div class="scenario-scroll" id="contemplationScenarios"></div>
     </section>
 
-    <section class="card rent-investment-section section" id="rentInvestmentSection">
-      <div class="comparison-head">
-        <div>
-          <h2>Consórcio + aluguel <em>x</em> financiamento</h2>
-          <p>As sobras mensais aplicadas até o fim do financiamento.</p>
-        </div>
-        <span class="comparison-badge">Tesouro Selic</span>
-      </div>
-
-      <div class="rent-investment-config">
-        <div class="finance-controls">
-          <div class="finance-control">
-            <label>Aluguel mensal R$</label>
-            <input class="money-input" id="rentMonthly" type="text" inputmode="decimal" value="1.500,00">
-          </div>
-          <div class="finance-control">
-            <label>Tesouro Selic a.a. %</label>
-            <input id="treasuryAnnualRate" type="text" inputmode="decimal" value="14,00">
-          </div>
-        </div>
-        <div class="rent-investment-period">
-          <span>Período da projeção</span>
-          <strong id="rentInvestmentPeriod">Até o fim do financiamento</strong>
-        </div>
-      </div>
-
-      <div class="compare-board compare-board-paired">
-        <div class="compare-paired-heads">
-          <div class="compare-paired-head consorcio">Consórcio + aluguel</div>
-          <div class="compare-paired-head financiamento">Financiamento</div>
-        </div>
-
-        <div class="compare-paired-row">
-          <div class="compare-cell consorcio">
-            <span>Custo mensal inicial</span>
-            <strong id="rentCombinedMonthly">R$ 0,00</strong>
-          </div>
-          <div class="compare-cell financiamento">
-            <span>Parcela inicial</span>
-            <strong id="rentFinanceMonthly">R$ 0,00</strong>
-          </div>
-        </div>
-
-        <div class="compare-paired-row">
-          <div class="compare-cell consorcio total">
-            <span>Total pago no período</span>
-            <strong id="rentCombinedPeriodTotal">R$ 0,00</strong>
-          </div>
-          <div class="compare-cell financiamento total">
-            <span>Parcelas até o fim</span>
-            <strong id="rentFinancePeriodTotal">R$ 0,00</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="rent-investment-metrics">
-        <div class="rent-investment-metric" id="rentInitialDifferenceCard">
-          <span id="rentInitialDifferenceLabel">Sobra mensal inicial</span>
-          <strong id="rentInitialDifference">R$ 0,00</strong>
-        </div>
-        <div class="rent-investment-metric">
-          <span>Total aplicado</span>
-          <strong id="rentInvestmentContributions">R$ 0,00</strong>
-        </div>
-        <div class="rent-investment-metric">
-          <span>Rendimento bruto</span>
-          <strong id="rentInvestmentEarnings">R$ 0,00</strong>
-        </div>
-      </div>
-
-      <div class="rent-investment-result" id="rentInvestmentResult">
-        <span id="rentInvestmentResultLabel">Saldo bruto projetado no Tesouro Selic</span>
-        <strong id="rentInvestmentBalance">R$ 0,00</strong>
-        <small id="rentInvestmentResultDetail">Aportes mensais até o fim do financiamento.</small>
-      </div>
-
-      <div class="rent-investment-note" id="rentInvestmentNote">
-        O aluguel termina na contemplação. Depois do fim do consórcio, a parcela inteira do financiamento vira aporte. Projeção bruta antes de IR e eventual custódia.
-      </div>
-    </section>
-
     <section class="card comparison-section section">
       <div class="comparison-head">
         <div>
@@ -2572,6 +2491,87 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
         <strong id="compareTotalDifference">R$ 0,00 a mais</strong>
       </div>
 
+    </section>
+
+    <section class="card rent-investment-section section" id="rentInvestmentSection">
+      <div class="comparison-head">
+        <div>
+          <h2>Consórcio + aluguel <em>x</em> financiamento</h2>
+          <p>As sobras mensais aplicadas até o fim do financiamento.</p>
+        </div>
+        <span class="comparison-badge">Tesouro Selic</span>
+      </div>
+
+      <div class="rent-investment-config">
+        <div class="finance-controls">
+          <div class="finance-control">
+            <label>Aluguel mensal R$</label>
+            <input class="money-input" id="rentMonthly" type="text" inputmode="decimal" value="1.500,00">
+          </div>
+          <div class="finance-control">
+            <label>Tesouro Selic a.a. %</label>
+            <input id="treasuryAnnualRate" type="text" inputmode="decimal" value="14,00">
+          </div>
+        </div>
+        <div class="rent-investment-period">
+          <span>Período da projeção</span>
+          <strong id="rentInvestmentPeriod">Até o fim do financiamento</strong>
+        </div>
+      </div>
+
+      <div class="compare-board compare-board-paired">
+        <div class="compare-paired-heads">
+          <div class="compare-paired-head consorcio">Consórcio + aluguel</div>
+          <div class="compare-paired-head financiamento">Financiamento</div>
+        </div>
+
+        <div class="compare-paired-row">
+          <div class="compare-cell consorcio">
+            <span>Custo mensal inicial</span>
+            <strong id="rentCombinedMonthly">R$ 0,00</strong>
+          </div>
+          <div class="compare-cell financiamento">
+            <span>Parcela inicial</span>
+            <strong id="rentFinanceMonthly">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="compare-paired-row">
+          <div class="compare-cell consorcio total">
+            <span>Total pago no período</span>
+            <strong id="rentCombinedPeriodTotal">R$ 0,00</strong>
+          </div>
+          <div class="compare-cell financiamento total">
+            <span>Parcelas até o fim</span>
+            <strong id="rentFinancePeriodTotal">R$ 0,00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="rent-investment-metrics">
+        <div class="rent-investment-metric" id="rentInitialDifferenceCard">
+          <span id="rentInitialDifferenceLabel">Sobra mensal inicial</span>
+          <strong id="rentInitialDifference">R$ 0,00</strong>
+        </div>
+        <div class="rent-investment-metric">
+          <span>Total aplicado</span>
+          <strong id="rentInvestmentContributions">R$ 0,00</strong>
+        </div>
+        <div class="rent-investment-metric">
+          <span>Rendimento bruto</span>
+          <strong id="rentInvestmentEarnings">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="rent-investment-result" id="rentInvestmentResult">
+        <span id="rentInvestmentResultLabel">Saldo bruto projetado no Tesouro Selic</span>
+        <strong id="rentInvestmentBalance">R$ 0,00</strong>
+        <small id="rentInvestmentResultDetail">Aportes mensais até o fim do financiamento.</small>
+      </div>
+
+      <div class="rent-investment-note" id="rentInvestmentNote">
+        O aluguel termina na contemplação. Depois do fim do consórcio, a parcela inteira do financiamento vira aporte. Projeção bruta antes de IR e eventual custódia.
+      </div>
     </section>
 
   </div>
