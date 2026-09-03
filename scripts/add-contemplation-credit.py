@@ -11,19 +11,32 @@ text = re.sub(r'\n?/\* contemplation-credit-v1-js:start \*/.*?/\* contemplation-
 
 credit_html = r'''
 <!-- contemplation-credit-v1:start -->
-<div class="contemplation-credit-quick">
+<div class="contemplation-credit-quick credit-control">
   <label for="projectionCreditQuick">Valor da carta</label>
-  <div class="contemplation-credit-input-wrap">
-    <span>R$</span>
-    <input
-      id="projectionCreditQuick"
-      type="text"
-      inputmode="decimal"
-      autocomplete="off"
-      enterkeyhint="done"
-      value="0,00"
-    >
+
+  <div class="credit-main contemplation-credit-main">
+    <div class="credit-input-wrap">
+      <span>R$</span>
+      <input
+        id="projectionCreditQuick"
+        class="money-input"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        enterkeyhint="done"
+        value="0,00"
+      >
+    </div>
+
+    <div class="credit-steps-mini contemplation-credit-steps">
+      <button class="credit-step mini" type="button" data-main-credit-step="creditMinus100">-100</button>
+      <button class="credit-step mini" type="button" data-main-credit-step="creditMinus10">-10</button>
+      <button class="credit-step mini" type="button" data-main-credit-step="creditPlus10">+10</button>
+      <button class="credit-step mini" type="button" data-main-credit-step="creditPlus100">+100</button>
+    </div>
   </div>
+
+  <div class="credit-shortcuts contemplation-credit-shortcuts" id="projectionCreditShortcuts"></div>
 </div>
 <!-- contemplation-credit-v1:end -->
 '''
@@ -35,52 +48,33 @@ if anchor in text:
 css = r'''
 /* contemplation-credit-v1:start */
 .contemplation-credit-quick{
-  margin:0 12px 10px;
-  padding:10px;
-  border:1px solid #e4e7ec;
-  border-radius:16px;
-  background:#fff;
-  box-shadow:0 3px 10px rgba(16,24,40,.05);
+  margin:0 12px 12px;
+  padding:0;
 }
-.contemplation-credit-quick label{
+.contemplation-credit-quick>label{
   display:block;
-  margin-bottom:6px;
+  margin:0 0 7px 2px;
   color:#475467;
   font-size:11px;
   line-height:1.1;
   font-weight:900;
 }
-.contemplation-credit-input-wrap{
-  height:42px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:0 11px;
-  border:1px solid #d0d5dd;
-  border-radius:13px;
-  background:#fff;
+.contemplation-credit-main{
+  width:100%;
 }
-.contemplation-credit-input-wrap:focus-within{
-  border-color:#98a2b3;
-  box-shadow:0 0 0 3px rgba(152,162,179,.12);
+.contemplation-credit-main .credit-input-wrap{
+  width:100%;
 }
-.contemplation-credit-input-wrap span{
-  color:#667085;
-  font-size:12px;
-  font-weight:900;
+.contemplation-credit-steps{
+  width:100%;
+}
+.contemplation-credit-shortcuts{
+  margin-top:8px;
+  padding-bottom:1px;
 }
 #projectionCreditQuick{
   width:100%;
   min-width:0;
-  border:0!important;
-  outline:0!important;
-  background:transparent!important;
-  color:#101828;
-  font-size:17px!important;
-  line-height:1!important;
-  font-weight:950!important;
-  padding:0!important;
-  box-shadow:none!important;
 }
 /* contemplation-credit-v1:end */
 '''
@@ -91,6 +85,7 @@ js = r'''
 (function(){
   const quick = document.getElementById('projectionCreditQuick');
   const source = document.getElementById('credit');
+  const quickShortcuts = document.getElementById('projectionCreditShortcuts');
   const openBtn = document.getElementById('projectionNumberBtn');
   if(!quick || !source) return;
 
@@ -98,10 +93,43 @@ js = r'''
     quick.value = source.value || '0,00';
   };
 
+  const renderQuickShortcuts = () => {
+    if(!quickShortcuts) return;
+
+    if(typeof renderCreditShortcuts === 'function'){
+      renderCreditShortcuts();
+    }
+
+    const mainButtons = Array.from(
+      document.querySelectorAll('#creditShortcuts .credit-chip')
+    );
+
+    quickShortcuts.innerHTML = '';
+
+    mainButtons.forEach(mainButton => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = mainButton.className;
+      button.textContent = mainButton.textContent;
+      button.disabled = !!mainButton.disabled;
+      button.addEventListener('click', () => {
+        mainButton.click();
+        syncFromMain();
+        requestAnimationFrame(renderQuickShortcuts);
+      });
+      quickShortcuts.appendChild(button);
+    });
+  };
+
+  const refreshModalCredit = () => {
+    syncFromMain();
+    renderQuickShortcuts();
+  };
+
   const applyQuickCredit = () => {
     const raw = quick.value;
     if(!raw || !String(raw).trim()){
-      syncFromMain();
+      refreshModalCredit();
       return;
     }
 
@@ -111,19 +139,32 @@ js = r'''
       formatMoneyField(source);
     }
 
-    quick.value = source.value;
+    syncFromMain();
 
     if(typeof renderCreditShortcuts === 'function'){
       renderCreditShortcuts();
     }
+
+    renderQuickShortcuts();
 
     if(typeof calculate === 'function'){
       calculate();
     }
   };
 
+  document.querySelectorAll('[data-main-credit-step]').forEach(button => {
+    button.addEventListener('click', () => {
+      const mainId = button.getAttribute('data-main-credit-step');
+      const mainButton = mainId ? document.getElementById(mainId) : null;
+      if(mainButton){
+        mainButton.click();
+        refreshModalCredit();
+      }
+    });
+  });
+
   openBtn?.addEventListener('click', () => {
-    requestAnimationFrame(syncFromMain);
+    requestAnimationFrame(refreshModalCredit);
   });
 
   quick.addEventListener('focus', syncFromMain);
@@ -137,8 +178,8 @@ js = r'''
     }
   });
 
-  source.addEventListener('change', syncFromMain);
-  syncFromMain();
+  source.addEventListener('change', refreshModalCredit);
+  refreshModalCredit();
 })();
 /* contemplation-credit-v1-js:end */
 '''
@@ -149,5 +190,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v17', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v18', sw)
     sw_path.write_text(sw, encoding='utf-8')
