@@ -11,6 +11,7 @@ on:
       - 'scripts/add-floating-navigation.py'
       - 'scripts/add-contemplation-credit.py'
       - 'scripts/remove-aportes-menu.py'
+      - 'scripts/add-section-focus.py'
   workflow_dispatch:
 
 permissions:
@@ -50,6 +51,9 @@ jobs:
       - name: Remover Aportes do menu lateral
         run: python scripts/remove-aportes-menu.py
 
+      - name: Adicionar foco automático por seção
+        run: python scripts/add-section-focus.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -59,7 +63,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Remover Aportes do menu lateral"
+            git commit -m "Adicionar foco automático por seção"
             git push
           fi
 
