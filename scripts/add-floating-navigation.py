@@ -4,7 +4,7 @@ import re
 index_path = Path('calculadora/index.html')
 text = index_path.read_text(encoding='utf-8')
 
-# Remove versão anterior, se existir.
+# Remove versões anteriores do menu flutuante.
 text = re.sub(r'\n?<!-- floating-nav-v1:start -->.*?<!-- floating-nav-v1:end -->\n?', '\n', text, flags=re.S)
 text = re.sub(r'\n?/\* floating-nav-v1:start \*/.*?/\* floating-nav-v1:end \*/\n?', '\n', text, flags=re.S)
 text = re.sub(r'\n?/\* floating-nav-v1-js:start \*/.*?/\* floating-nav-v1-js:end \*/\n?', '\n', text, flags=re.S)
@@ -13,140 +13,124 @@ css = r'''
 /* floating-nav-v1:start */
 .floating-nav-trigger{
   position:fixed;
-  right:10px;
+  right:0;
   top:50%;
   transform:translateY(-50%);
   z-index:1402;
-  width:48px;
-  height:48px;
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:50%;
-  background:linear-gradient(145deg,#1f2937,#111827);
-  color:#fff;
-  box-shadow:0 12px 28px rgba(16,24,40,.24);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:10px;
+  height:66px;
+  border:0;
+  border-radius:9px 0 0 9px;
+  background:#344054;
+  box-shadow:-2px 4px 12px rgba(16,24,40,.16);
   padding:0;
-  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  touch-action:pan-y;
   -webkit-tap-highlight-color:transparent;
+  transition:opacity .16s ease, transform .16s ease;
 }
-.floating-nav-trigger:active{transform:translateY(-50%) scale(.94)}
-.floating-nav-trigger.open{background:linear-gradient(145deg,#c8161d,#971118);box-shadow:0 12px 28px rgba(151,17,24,.28)}
-.floating-nav-trigger-icon{
-  width:20px;
-  height:20px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:3px;
-  transition:transform .2s ease;
+.floating-nav-trigger::before{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:18px;
+  width:3px;
+  height:30px;
+  border-radius:999px;
+  background:rgba(255,255,255,.9);
 }
-.floating-nav-trigger-icon i{
-  display:block;
-  border-radius:3px;
-  background:#fff;
-}
-.floating-nav-trigger.open .floating-nav-trigger-icon{transform:rotate(45deg)}
-
-.floating-nav-backdrop{
-  position:fixed;
-  inset:0;
-  z-index:1398;
-  background:rgba(16,24,40,.16);
+.floating-nav-trigger:active{transform:translateY(-50%) translateX(-2px)}
+.floating-nav-trigger.open{
   opacity:0;
-  visibility:hidden;
-  transition:opacity .18s ease, visibility .18s ease;
-  backdrop-filter:blur(1px);
+  pointer-events:none;
+  transform:translateY(-50%) translateX(8px);
 }
-.floating-nav-backdrop.open{opacity:1;visibility:visible}
 
+/* Sem fundo, sem blur e sem caixa geral: aparecem apenas os atalhos. */
 .floating-nav-panel{
   position:fixed;
   z-index:1401;
-  right:66px;
+  right:7px;
   top:50%;
-  width:min(310px,calc(100vw - 86px));
-  max-height:min(74vh,610px);
-  padding:9px;
-  border:1px solid rgba(228,231,236,.95);
-  border-radius:22px;
-  background:rgba(255,255,255,.98);
-  box-shadow:0 24px 60px rgba(16,24,40,.24);
-  transform:translateY(-50%) translateX(12px) scale(.96);
-  transform-origin:right center;
+  width:min(214px,calc(100vw - 34px));
+  max-height:78vh;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transform:translateY(-50%) translateX(18px);
   opacity:0;
   visibility:hidden;
   pointer-events:none;
   overflow-y:auto;
   overscroll-behavior:contain;
   scrollbar-width:none;
-  transition:transform .2s ease, opacity .18s ease, visibility .18s ease;
+  transition:transform .18s ease, opacity .16s ease, visibility .16s ease;
 }
 .floating-nav-panel::-webkit-scrollbar{display:none}
 .floating-nav-panel.open{
-  transform:translateY(-50%) translateX(0) scale(1);
+  transform:translateY(-50%) translateX(0);
   opacity:1;
   visibility:visible;
   pointer-events:auto;
 }
-.floating-nav-list{display:flex;flex-direction:column;gap:6px}
+.floating-nav-list{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:4px;
+}
 .floating-nav-item{
   width:100%;
-  border:1px solid #e4e7ec;
-  border-radius:14px;
-  background:#f2f4f7;
+  min-height:38px;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  background:rgba(242,244,247,.98);
   color:#101828;
-  padding:10px 11px;
+  padding:6px 9px;
   display:grid;
-  grid-template-columns:34px 1fr 18px;
-  gap:9px;
+  grid-template-columns:24px 1fr;
+  gap:7px;
   align-items:center;
   text-align:left;
-  box-shadow:0 1px 2px rgba(16,24,40,.03);
+  box-shadow:0 3px 10px rgba(16,24,40,.08);
+  -webkit-tap-highlight-color:transparent;
 }
-.floating-nav-item:active{background:#e9edf2;transform:scale(.99)}
+.floating-nav-item:active{
+  background:#e4e7ec;
+  transform:translateX(1px);
+}
 .floating-nav-item-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
+  width:24px;
+  height:24px;
+  border-radius:7px;
   display:flex;
   align-items:center;
   justify-content:center;
   background:#fff;
   border:1px solid #e4e7ec;
-  font-size:16px;
+  font-size:13px;
+  line-height:1;
 }
 .floating-nav-item-copy{min-width:0}
 .floating-nav-item-copy strong{
   display:block;
-  font-size:12.5px;
-  line-height:1.12;
-  font-weight:950;
-  color:#101828;
-}
-.floating-nav-item-copy small{
-  display:block;
-  margin-top:3px;
-  font-size:10px;
-  line-height:1.22;
-  font-weight:750;
-  color:#667085;
-}
-.floating-nav-item-arrow{
-  color:#98a2b3;
-  font-size:18px;
-  line-height:1;
+  font-size:11.5px;
+  line-height:1.08;
   font-weight:900;
-  text-align:center;
+  color:#101828;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 @media (max-width:380px){
-  .floating-nav-trigger{right:8px;width:44px;height:44px}
-  .floating-nav-panel{right:58px;width:calc(100vw - 72px);padding:7px;border-radius:18px}
-  .floating-nav-item{grid-template-columns:31px 1fr 16px;padding:9px;gap:7px}
-  .floating-nav-item-icon{width:31px;height:31px;font-size:15px}
-  .floating-nav-item-copy strong{font-size:11.5px}
-  .floating-nav-item-copy small{font-size:9.3px}
+  .floating-nav-trigger{width:9px;height:58px}
+  .floating-nav-trigger::before{left:3px;top:16px;width:3px;height:26px}
+  .floating-nav-panel{right:6px;width:min(202px,calc(100vw - 30px))}
+  .floating-nav-item{min-height:36px;padding:5px 8px;grid-template-columns:23px 1fr;gap:6px}
+  .floating-nav-item-icon{width:23px;height:23px;font-size:12px}
+  .floating-nav-item-copy strong{font-size:11px}
 }
 /* floating-nav-v1:end */
 '''
@@ -154,51 +138,40 @@ text = text.replace('</style>', css + '\n</style>', 1)
 
 html = r'''
 <!-- floating-nav-v1:start -->
-<div class="floating-nav-backdrop" id="floatingNavBackdrop" aria-hidden="true"></div>
-<button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir navegação" aria-expanded="false">
-  <span class="floating-nav-trigger-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-</button>
+<button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
   <div class="floating-nav-list">
     <button class="floating-nav-item" type="button" data-nav-target=".form.section">
       <span class="floating-nav-item-icon">🧮</span>
-      <span class="floating-nav-item-copy"><strong>Simulação</strong><small>Carta, prazo e parcela</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Simulação</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target=".lance-list.section">
       <span class="floating-nav-item-icon">🎯</span>
-      <span class="floating-nav-item-copy"><strong>Tipos de lance</strong><small>Veja as opções disponíveis</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Lances</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target=".projection-v2.section">
       <span class="floating-nav-item-icon">📈</span>
-      <span class="floating-nav-item-copy"><strong>Projeção anual</strong><small>Evolução da carta e parcela</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Projeção anual</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target=".contemplation-scenarios.section">
       <span class="floating-nav-item-icon">💡</span>
-      <span class="floating-nav-item-copy"><strong>Após contemplar</strong><small>Cenários de uso da carta</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Após contemplar</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target=".comparison-section.section">
       <span class="floating-nav-item-icon">⚖️</span>
-      <span class="floating-nav-item-copy"><strong>Consórcio x financiamento</strong><small>Compare custos e parcelas</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Consórcio x financiamento</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target="#inccSalarySection">
       <span class="floating-nav-item-icon">💰</span>
-      <span class="floating-nav-item-copy"><strong>Parcela x salário</strong><small>Comparativo dos últimos 18 anos</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Parcela x salário</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target="#rentInvestmentSection">
       <span class="floating-nav-item-icon">🏦</span>
-      <span class="floating-nav-item-copy"><strong>Consórcio + aluguel</strong><small>Sobras aplicadas no Tesouro</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Consórcio + aluguel</strong></span>
     </button>
     <button class="floating-nav-item" type="button" data-nav-target="#rentInvestmentTimeline" data-open-details="true">
       <span class="floating-nav-item-icon">🗓️</span>
-      <span class="floating-nav-item-copy"><strong>Evolução dos aportes</strong><small>Veja os valores ano a ano</small></span>
-      <span class="floating-nav-item-arrow">›</span>
+      <span class="floating-nav-item-copy"><strong>Aportes</strong></span>
     </button>
   </div>
 </div>
@@ -211,20 +184,41 @@ js = r'''
 (function(){
   const trigger = document.getElementById('floatingNavTrigger');
   const panel = document.getElementById('floatingNavPanel');
-  const backdrop = document.getElementById('floatingNavBackdrop');
-  if(!trigger || !panel || !backdrop) return;
+  if(!trigger || !panel) return;
+
+  let opened = false;
+  let startX = null;
+  let panelStartX = null;
 
   const setOpen = (open) => {
-    trigger.classList.toggle('open', open);
-    panel.classList.toggle('open', open);
-    backdrop.classList.toggle('open', open);
-    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
-    backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+    opened = !!open;
+    trigger.classList.toggle('open', opened);
+    panel.classList.toggle('open', opened);
+    trigger.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    panel.setAttribute('aria-hidden', opened ? 'false' : 'true');
   };
 
-  trigger.addEventListener('click', () => setOpen(!panel.classList.contains('open')));
-  backdrop.addEventListener('click', () => setOpen(false));
+  trigger.addEventListener('click', () => setOpen(true));
+
+  trigger.addEventListener('touchstart', event => {
+    startX = event.touches && event.touches[0] ? event.touches[0].clientX : null;
+  }, {passive:true});
+  trigger.addEventListener('touchend', event => {
+    if(startX == null) return;
+    const endX = event.changedTouches && event.changedTouches[0] ? event.changedTouches[0].clientX : startX;
+    if(endX - startX < -18) setOpen(true);
+    startX = null;
+  }, {passive:true});
+
+  panel.addEventListener('touchstart', event => {
+    panelStartX = event.touches && event.touches[0] ? event.touches[0].clientX : null;
+  }, {passive:true});
+  panel.addEventListener('touchend', event => {
+    if(panelStartX == null) return;
+    const endX = event.changedTouches && event.changedTouches[0] ? event.changedTouches[0].clientX : panelStartX;
+    if(endX - panelStartX > 24) setOpen(false);
+    panelStartX = null;
+  }, {passive:true});
 
   panel.querySelectorAll('[data-nav-target]').forEach(button => {
     button.addEventListener('click', () => {
@@ -237,10 +231,14 @@ js = r'''
       }
 
       setOpen(false);
-      requestAnimationFrame(() => {
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      });
+      requestAnimationFrame(() => target.scrollIntoView({behavior:'smooth', block:'start'}));
     });
+  });
+
+  document.addEventListener('pointerdown', event => {
+    if(!opened) return;
+    if(panel.contains(event.target) || trigger.contains(event.target)) return;
+    setOpen(false);
   });
 
   document.addEventListener('keydown', event => {
@@ -256,5 +254,5 @@ index_path.write_text(text, encoding='utf-8')
 sw_path = Path('calculadora/service-worker.js')
 if sw_path.exists():
     sw = sw_path.read_text(encoding='utf-8')
-    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v13', sw)
+    sw = re.sub(r'calculadora-ademicon-pwa-v\d+', 'calculadora-ademicon-pwa-v14', sw)
     sw_path.write_text(sw, encoding='utf-8')
