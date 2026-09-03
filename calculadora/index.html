@@ -2503,6 +2503,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 /* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
@@ -3701,6 +3703,8 @@ body.section-focus-mode .section.section-focus-active{
 
 
 
+
+
 <!-- floating-nav-v1:start -->
 <button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
@@ -4008,6 +4012,8 @@ function projectionMaxValue(){
 
 
 
+
+
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
   const btn = $("projectionNumberBtn");
@@ -4027,6 +4033,8 @@ function setProjectionContemplation(value, closeAccordion=true){
 
   calculate();
 }
+
+
 
 
 
@@ -9759,6 +9767,18 @@ restore();
 </script>
 <script>
 
+
+</script>
+<script>
+
+
+</script>
+<script>
+
+
+</script>
+<script>
+
 /* floating-nav-v1-js:start */
 (function(){
   const trigger = document.getElementById('floatingNavTrigger');
@@ -9767,7 +9787,6 @@ restore();
 
   let opened = false;
   let startX = null;
-  let panelStartX = null;
 
   const setOpen = (open) => {
     opened = !!open;
@@ -9787,16 +9806,6 @@ restore();
     const endX = event.changedTouches && event.changedTouches[0] ? event.changedTouches[0].clientX : startX;
     if(endX - startX < -16) setOpen(true);
     startX = null;
-  }, {passive:true});
-
-  panel.addEventListener('touchstart', event => {
-    panelStartX = event.touches && event.touches[0] ? event.touches[0].clientX : null;
-  }, {passive:true});
-  panel.addEventListener('touchend', event => {
-    if(panelStartX == null) return;
-    const endX = event.changedTouches && event.changedTouches[0] ? event.changedTouches[0].clientX : panelStartX;
-    if(endX - panelStartX > 24) setOpen(false);
-    panelStartX = null;
   }, {passive:true});
 
   panel.querySelectorAll('[data-nav-target]').forEach(button => {
