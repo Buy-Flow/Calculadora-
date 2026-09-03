@@ -9,24 +9,49 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-incc
+  cancel-in-progress: true
 
 jobs:
   patch:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Atualizar comparativo para cliente e mobile
         run: python scripts/add-incc-salary-history.py
+
       - name: Salvar alteração
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Nenhuma alteração necessária."
-            exit 0
+            echo "Nenhuma alteração de conteúdo necessária."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add calculadora/index.html calculadora/service-worker.js
+            git commit -m "Melhorar INCC para cliente e corrigir tabela mobile"
+            git push
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add calculadora/index.html calculadora/service-worker.js
-          git commit -m "Melhorar INCC para cliente e corrigir tabela mobile"
-          git push
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Preparar arquivos do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar versão atualizada
+        id: deployment
+        uses: actions/deploy-pages@v4
