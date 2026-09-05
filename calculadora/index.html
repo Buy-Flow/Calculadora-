@@ -2509,6 +2509,8 @@ details[open] .proj2-chevron{transform:rotate(180deg)}
 
 
 
+
+
 /* global-readable-v3 */
 /* Tipografia geral mais legível sem aumentar demais a altura do site. */
 .hero-mini-note{font-size:10.5px!important;line-height:1.25!important}
@@ -3073,6 +3075,46 @@ body.section-focus-mode .section.section-focus-active{
 @media (min-width:520px){.ai-impact-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){.ai-progress>i{transition:none!important}}
 /* real-estate-retirement-v1:end */
+
+
+/* real-estate-retirement-apollo-v2:start */
+.ai-apollo-plan-head{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:0 2px;
+}
+.ai-apollo-plan-head span{
+  color:#101828;
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+}
+.ai-apollo-plan-head small{
+  color:#98a2b3;
+  font-size:7.5px;
+  line-height:1;
+  font-weight:800;
+}
+.ai-outcome-grid{
+  margin-top:7px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+}
+.ai-outcome-grid .ai-impact-card{
+  min-height:72px;
+}
+.ai-retirement .ai-impact-grid{
+  margin-top:6px;
+}
+@media (max-width:360px){
+  .ai-apollo-plan-head small{font-size:7px}
+  .ai-impact-card b{font-size:15px}
+}
+/* real-estate-retirement-apollo-v2:end */
 
 </style>
 </head>
@@ -3796,6 +3838,10 @@ body.section-focus-mode .section.section-focus-active{
 
 
 
+
+
+
+
 <!-- floating-nav-v1:start -->
 <button class="floating-nav-trigger" id="floatingNavTrigger" type="button" aria-label="Abrir atalhos" aria-expanded="false"></button>
 <div class="floating-nav-panel" id="floatingNavPanel" aria-hidden="true">
@@ -3916,7 +3962,15 @@ body.section-focus-mode .section.section-focus-active{
       <p class="ai-assumption-note">Premissas editáveis para cenário ilustrativo. Não representam garantia de valorização, aluguel ou contemplação.</p>
     </details>
 
+
+<!-- real-estate-retirement-apollo-v2:start -->
+    <div class="ai-apollo-plan-head">
+      <span>📋 Planejamento</span>
+      <small>resumo do cenário em tempo real</small>
+    </div>
     <div class="ai-impact-grid" id="aiImpactGrid"></div>
+    <div class="ai-outcome-grid" id="aiOutcomeGrid"></div>
+<!-- real-estate-retirement-apollo-v2:end -->
     <div class="ai-highlight" id="aiHighlight"></div>
 
     <div class="ai-section-title">
@@ -4206,6 +4260,8 @@ function projectionMaxValue(){
 
 
 
+
+
 function updateProjectionNumber(){
   const input = $("projectionContemplation");
   const btn = $("projectionNumberBtn");
@@ -4225,6 +4281,8 @@ function setProjectionContemplation(value, closeAccordion=true){
 
   calculate();
 }
+
+
 
 
 
@@ -10037,6 +10095,22 @@ restore();
 </script>
 <script>
 
+
+</script>
+<script>
+
+
+</script>
+<script>
+
+
+</script>
+<script>
+
+
+</script>
+<script>
+
 /* floating-nav-v1-js:start */
 (function(){
   const trigger = document.getElementById('floatingNavTrigger');
@@ -10492,20 +10566,41 @@ restore();
 
   function buildImpact(sc){
     const items=sc.items;
-    const creditTotal=items.reduce((s,p)=>s+p.credit,0),purchaseTotal=items.reduce((s,p)=>s+p.purchaseValue,0);
-    const initialRent=items.reduce((s,p)=>s+p.initialRent,0),finalValue=items.reduce((s,p)=>s+p.finalValue,0),finalRent=items.reduce((s,p)=>s+p.finalRent,0);
-    const avgCoverage=items.length?items.reduce((s,p)=>s+p.coverage,0)/items.length:0,pocket=items.reduce((s,p)=>s+p.outOfPocket,0);
+    const creditTotal=items.reduce((s,p)=>s+p.credit,0);
+    const creditReleased=items.reduce((s,p)=>s+p.creditAtCont,0);
+    const purchaseTotal=items.reduce((s,p)=>s+p.purchaseValue,0);
+    const initialParcel=items.reduce((s,p)=>s+p.beforeParcel,0);
+    const postParcel=items.reduce((s,p)=>s+p.afterParcel,0);
+    const initialRent=items.reduce((s,p)=>s+p.initialRent,0);
+    const finalValue=items.reduce((s,p)=>s+p.finalValue,0);
+    const finalRent=items.reduce((s,p)=>s+p.finalRent,0);
+    const avgCoverage=items.length?items.reduce((s,p)=>s+p.coverage,0)/items.length:0;
+    const pocket=items.reduce((s,p)=>s+p.outOfPocket,0);
+    const rentPct=sc.rentYield*100;
+    const reajustePct=sc.creditGrowth*100;
+
     $ai('aiImpactGrid').innerHTML=[
-      metric('🏠','Imóveis planejados',String(items.length),'cotas neste cenário',false),
-      metric('💳','Crédito contratado',compactMoney(creditTotal),'soma das cartas',false),
-      metric('🔑','Capital em imóveis',compactMoney(purchaseTotal),'após custos de compra',false),
-      metric('🧱','Patrimônio projetado',compactMoney(finalValue),`ao fim de ${Math.round(sc.horizonYears)} anos`,true),
-      metric('💰','Aluguel inicial',money(initialRent)+'/mês','quando todos estiverem locados',false),
-      metric('🌱','Renda passiva final',money(finalRent)+'/mês','cenário projetado',true),
-      metric('📊','Cobertura média',`${(avgCoverage*100).toLocaleString('pt-BR',{maximumFractionDigits:0})}%`,'aluguel ÷ parcela pós',false),
-      metric('👛','Complemento estimado',money(pocket)+'/mês','logo após as contemplações',false)
+      metric('🏠','Cotas',String(items.length),'um imóvel planejado por cota',false),
+      metric('💳','Crédito inicial',compactMoney(creditTotal),'soma das cartas deste cenário',false),
+      metric('🔓','Crédito liberado planejado',compactMoney(creditReleased),'estimativa das cartas na contemplação',false),
+      metric('🧾','Parcelas iniciais',money(initialParcel)+'/mês','antes das contemplações',false),
+      metric('💰','Aluguel previsto',`${rentPct.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}% a.m.`,`${money(initialRent)}/mês quando todos estiverem locados`,false),
+      metric('📈','Reajuste usado',`${reajustePct.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}% a.a.`,'premissa editável do cenário',false)
     ].join('');
-    $ai('aiHighlight').innerHTML=`Com este cenário, você projeta <b>${items.length} ${items.length===1?'imóvel':'imóveis'}</b>, patrimônio de <b>${money(finalValue)}</b> e renda mensal de <b>${money(finalRent)}</b> ao final de <b>${Math.round(sc.horizonYears)} anos</b>.`;
+
+    const outcome=$ai('aiOutcomeGrid');
+    if(outcome){
+      outcome.innerHTML=[
+        metric('🔑','Valor dos imóveis na compra',compactMoney(purchaseTotal),'após a premissa de custos/documentação',false),
+        metric('💵','Aluguel inicial',money(initialRent)+'/mês','renda estimada após as aquisições',false),
+        metric('🧱','Patrimônio projetado',compactMoney(finalValue),`ao fim de ${Math.round(sc.horizonYears)} anos`,true),
+        metric('🌱','Renda passiva final',money(finalRent)+'/mês','aluguel mensal no fim do horizonte',true),
+        metric('📊','Cobertura média',`${(avgCoverage*100).toLocaleString('pt-BR',{maximumFractionDigits:0})}%`,'aluguel ÷ parcela pós-contemplação',false),
+        metric('👛','Complemento estimado',money(pocket)+'/mês',`parcelas pós estimadas: ${money(postParcel)}/mês`,false)
+      ].join('');
+    }
+
+    $ai('aiHighlight').innerHTML=`Com este cenário, você começa com <b>${items.length} ${items.length===1?'cota':'cotas'}</b> e <b>${money(creditTotal)}</b> em crédito. Depois das contemplações, o planejamento projeta cerca de <b>${money(purchaseTotal)}</b> convertidos em imóveis. Ao final de <b>${Math.round(sc.horizonYears)} anos</b>, o patrimônio projetado é de <b>${money(finalValue)}</b>, com renda mensal estimada de <b>${money(finalRent)}</b>.`;
   }
 
   function buildSnowball(sc){
