@@ -17,6 +17,7 @@ on:
       - 'scripts/remove-floating-nav-swipe-close.py'
       - 'scripts/add-real-estate-retirement.py'
       - 'scripts/enable-salary-history-all-segments.py'
+      - 'scripts/refine-real-estate-retirement.py'
   workflow_dispatch:
 
 permissions:
@@ -74,6 +75,9 @@ jobs:
       - name: Adicionar Parcela x salário em todos os segmentos
         run: python scripts/enable-salary-history-all-segments.py
 
+      - name: Refinar Aposentadoria Imobiliária no estilo Apollo
+        run: python scripts/refine-real-estate-retirement.py
+
       - name: Salvar alteração
         shell: bash
         run: |
@@ -83,7 +87,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add calculadora/index.html calculadora/service-worker.js
-            git commit -m "Adicionar Parcela x salário em todos os segmentos"
+            git commit -m "Refinar aposentadoria imobiliária"
             git push
           fi
 
